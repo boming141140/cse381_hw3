@@ -1,0 +1,158 @@
+^D:\DESKTOP\HW3_CSE381\HW3\BUILD\CMAKEFILES\EDED8A664F72F00F582DAEFE766F2951\BLINN_PHONG.FRAG.SPV.RULE
+setlocal
+C:\VulkanSDK\1.3.261.1\Bin\glslc.exe D:/Desktop/hw3_cse381/HW3/shaders/blinn_phong.frag -o D:/Desktop/hw3_cse381/HW3/build/shaders/blinn_phong.frag.spv
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\DESKTOP\HW3_CSE381\HW3\BUILD\CMAKEFILES\EDED8A664F72F00F582DAEFE766F2951\BLINN_PHONG.VERT.SPV.RULE
+setlocal
+C:\VulkanSDK\1.3.261.1\Bin\glslc.exe D:/Desktop/hw3_cse381/HW3/shaders/blinn_phong.vert -o D:/Desktop/hw3_cse381/HW3/build/shaders/blinn_phong.vert.spv
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\DESKTOP\HW3_CSE381\HW3\BUILD\CMAKEFILES\EDED8A664F72F00F582DAEFE766F2951\BRDF_LUT.FRAG.SPV.RULE
+setlocal
+C:\VulkanSDK\1.3.261.1\Bin\glslc.exe D:/Desktop/hw3_cse381/HW3/shaders/brdf_lut.frag -o D:/Desktop/hw3_cse381/HW3/build/shaders/brdf_lut.frag.spv
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\DESKTOP\HW3_CSE381\HW3\BUILD\CMAKEFILES\EDED8A664F72F00F582DAEFE766F2951\BRDF_LUT.VERT.SPV.RULE
+setlocal
+C:\VulkanSDK\1.3.261.1\Bin\glslc.exe D:/Desktop/hw3_cse381/HW3/shaders/brdf_lut.vert -o D:/Desktop/hw3_cse381/HW3/build/shaders/brdf_lut.vert.spv
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\DESKTOP\HW3_CSE381\HW3\BUILD\CMAKEFILES\EDED8A664F72F00F582DAEFE766F2951\IRRADIANCE.FRAG.SPV.RULE
+setlocal
+C:\VulkanSDK\1.3.261.1\Bin\glslc.exe D:/Desktop/hw3_cse381/HW3/shaders/irradiance.frag -o D:/Desktop/hw3_cse381/HW3/build/shaders/irradiance.frag.spv
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\DESKTOP\HW3_CSE381\HW3\BUILD\CMAKEFILES\EDED8A664F72F00F582DAEFE766F2951\IRRADIANCE.VERT.SPV.RULE
+setlocal
+C:\VulkanSDK\1.3.261.1\Bin\glslc.exe D:/Desktop/hw3_cse381/HW3/shaders/irradiance.vert -o D:/Desktop/hw3_cse381/HW3/build/shaders/irradiance.vert.spv
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\DESKTOP\HW3_CSE381\HW3\BUILD\CMAKEFILES\EDED8A664F72F00F582DAEFE766F2951\LIGHTS.FRAG.SPV.RULE
+setlocal
+C:\VulkanSDK\1.3.261.1\Bin\glslc.exe D:/Desktop/hw3_cse381/HW3/shaders/lights.frag -o D:/Desktop/hw3_cse381/HW3/build/shaders/lights.frag.spv
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\DESKTOP\HW3_CSE381\HW3\BUILD\CMAKEFILES\EDED8A664F72F00F582DAEFE766F2951\LIGHTS.VERT.SPV.RULE
+setlocal
+C:\VulkanSDK\1.3.261.1\Bin\glslc.exe D:/Desktop/hw3_cse381/HW3/shaders/lights.vert -o D:/Desktop/hw3_cse381/HW3/build/shaders/lights.vert.spv
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\DESKTOP\HW3_CSE381\HW3\BUILD\CMAKEFILES\EDED8A664F72F00F582DAEFE766F2951\PBR.FRAG.SPV.RULE
+setlocal
+C:\VulkanSDK\1.3.261.1\Bin\glslc.exe D:/Desktop/hw3_cse381/HW3/shaders/pbr.frag -o D:/Desktop/hw3_cse381/HW3/build/shaders/pbr.frag.spv
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\DESKTOP\HW3_CSE381\HW3\BUILD\CMAKEFILES\EDED8A664F72F00F582DAEFE766F2951\PBR.VERT.SPV.RULE
+setlocal
+C:\VulkanSDK\1.3.261.1\Bin\glslc.exe D:/Desktop/hw3_cse381/HW3/shaders/pbr.vert -o D:/Desktop/hw3_cse381/HW3/build/shaders/pbr.vert.spv
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\DESKTOP\HW3_CSE381\HW3\BUILD\CMAKEFILES\EDED8A664F72F00F582DAEFE766F2951\PREFILTER.FRAG.SPV.RULE
+setlocal
+C:\VulkanSDK\1.3.261.1\Bin\glslc.exe D:/Desktop/hw3_cse381/HW3/shaders/prefilter.frag -o D:/Desktop/hw3_cse381/HW3/build/shaders/prefilter.frag.spv
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\DESKTOP\HW3_CSE381\HW3\BUILD\CMAKEFILES\EDED8A664F72F00F582DAEFE766F2951\PREFILTER.VERT.SPV.RULE
+setlocal
+C:\VulkanSDK\1.3.261.1\Bin\glslc.exe D:/Desktop/hw3_cse381/HW3/shaders/prefilter.vert -o D:/Desktop/hw3_cse381/HW3/build/shaders/prefilter.vert.spv
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\DESKTOP\HW3_CSE381\HW3\BUILD\CMAKEFILES\EDED8A664F72F00F582DAEFE766F2951\SKYBOX.FRAG.SPV.RULE
+setlocal
+C:\VulkanSDK\1.3.261.1\Bin\glslc.exe D:/Desktop/hw3_cse381/HW3/shaders/skybox.frag -o D:/Desktop/hw3_cse381/HW3/build/shaders/skybox.frag.spv
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\DESKTOP\HW3_CSE381\HW3\BUILD\CMAKEFILES\EDED8A664F72F00F582DAEFE766F2951\SKYBOX.VERT.SPV.RULE
+setlocal
+C:\VulkanSDK\1.3.261.1\Bin\glslc.exe D:/Desktop/hw3_cse381/HW3/shaders/skybox.vert -o D:/Desktop/hw3_cse381/HW3/build/shaders/skybox.vert.spv
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\DESKTOP\HW3_CSE381\HW3\BUILD\CMAKEFILES\86015011DA7D2E06FA44BC007E102B10\SHADERS.RULE
+setlocal
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\DESKTOP\HW3_CSE381\HW3\SHADERS\CMAKELISTS.TXT
+setlocal
+C:\Users\12698\winlibs-x86_64-mcf-seh-gcc-13.1.0-llvm-16.0.2-mingw-w64ucrt-11.0.0-r1\mingw64\bin\cmake.exe -SD:/Desktop/hw3_cse381/HW3 -BD:/Desktop/hw3_cse381/HW3/build --check-stamp-file D:/Desktop/hw3_cse381/HW3/build/shaders/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

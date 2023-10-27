@@ -1,0 +1,111 @@
+﻿  Building Custom Rule D:/Desktop/hw3_cse381/HW3/CMakeLists.txt
+  main.cpp
+  gltf_loader.cpp
+  stb_image_resize.cpp
+  tiny_gltf.cpp
+  pbr_baker.cpp
+  controller.cpp
+  cvar.cpp
+  file_utils.cpp
+  timer.cpp
+  utils.cpp
+  command_buffer.cpp
+  command_pool.cpp
+  descriptor_allocator.cpp
+  device.cpp
+  framebuffer.cpp
+  graphics_pipeline.cpp
+  image_resource.cpp
+  image_view.cpp
+  instance.cpp
+  physical_device.cpp
+D:\VS2022\VC\Tools\MSVC\14.36.32532\include\optional(157,46): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
+D:\VS2022\VC\Tools\MSVC\14.36.32532\include\optional(291,13): message : see reference to function template instantiation 'void std::_Optional_construct_base<_Ty>::_Assign<size_t&>(_Ty2) noexcept' being compiled
+          with
+          [
+              _Ty=uint32_t,
+              _Ty2=size_t &
+          ]
+D:\Desktop\hw3_cse381\HW3\src\core\physical_device.cpp(53,27): message : see reference to function template instantiation 'std::optional<uint32_t> &std::optional<uint32_t>::operator =<size_t&,0>(_Ty2) noexcept' being compiled
+          with
+          [
+              _Ty2=size_t &
+          ]
+D:\Desktop\hw3_cse381\HW3\src\core\physical_device.cpp(53,27): message : see the first reference to 'std::optional<uint32_t>::operator =' in 'W3D::PhysicalDevice::find_queue_familiy_indices'
+D:\VS2022\VC\Tools\MSVC\14.36.32532\include\xutility(251,49): warning C4267: 'initializing': conversion from 'size_t' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=unsigned int
+          ]
+D:\VS2022\VC\Tools\MSVC\14.36.32532\include\xutility(261,14): message : see reference to function template instantiation '_Ty *std::construct_at<_Ty,size_t&,0x0>(_Ty *const ,size_t &) noexcept(<expr>)' being compiled
+          with
+          [
+              _Ty=unsigned int
+          ]
+D:\VS2022\VC\Tools\MSVC\14.36.32532\include\optional(147,9): message : see reference to function template instantiation 'void std::_Construct_in_place<unsigned int,size_t&>(_Ty &,size_t &) noexcept' being compiled
+          with
+          [
+              _Ty=unsigned int
+          ]
+D:\VS2022\VC\Tools\MSVC\14.36.32532\include\optional(159,13): message : see reference to function template instantiation '_Ty &std::_Optional_construct_base<_Ty>::_Construct<size_t&>(size_t &) noexcept' being compiled
+          with
+          [
+              _Ty=uint32_t
+          ]
+D:\VS2022\VC\Tools\MSVC\14.36.32532\include\optional(291,13): message : see reference to function template instantiation 'void std::_Optional_construct_base<_Ty>::_Assign<size_t&>(_Ty2) noexcept' being compiled
+          with
+          [
+              _Ty=uint32_t,
+              _Ty2=size_t &
+          ]
+D:\VS2022\VC\Tools\MSVC\14.36.32532\include\xutility(265,56): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+D:\VS2022\VC\Tools\MSVC\14.36.32532\include\xutility(252,64): warning C4267: 'initializing': conversion from 'size_t' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=unsigned int
+          ]
+D:\VS2022\VC\Tools\MSVC\14.36.32532\include\xutility(261,14): message : see reference to function template instantiation '_Ty *std::construct_at<_Ty,size_t&,0x0>(_Ty *const ,size_t &) noexcept' being compiled
+          with
+          [
+              _Ty=unsigned int
+          ]
+D:\VS2022\VC\Tools\MSVC\14.36.32532\include\optional(147,9): message : see reference to function template instantiation 'void std::_Construct_in_place<unsigned int,size_t&>(_Ty &,size_t &) noexcept' being compiled
+          with
+          [
+              _Ty=unsigned int
+          ]
+  Generating Code...
+  Compiling...
+  pipeline_layout.cpp
+  render_pass.cpp
+  renderer.cpp
+  surface.cpp
+  swapchain.cpp
+  sync_objects.cpp
+  window.cpp
+  allocator.cpp
+  buffer.cpp
+  vk_mem_alloc.cpp
+  component.cpp
+  node.cpp
+  scene.cpp
+  script.cpp
+  aabb.cpp
+  camera.cpp
+  material.cpp
+  mesh.cpp
+  pbr_material.cpp
+  perspective_camera.cpp
+  Generating Code...
+  Compiling...
+  submesh.cpp
+  texture.cpp
+  transform.cpp
+  free_camera.cpp
+  player.cpp
+  Generating Code...
+  sampler.cpp
+  image.cpp
+  image.cpp
+  sampler.cpp
+  Wolfie3D.vcxproj -> D:\Desktop\hw3_cse381\HW3\build\Debug\Wolfie3D.exe

@@ -1,0 +1,5 @@
+# CMake generation dependency list for this directory.
+C:/Users/12698/winlibs-x86_64-mcf-seh-gcc-13.1.0-llvm-16.0.2-mingw-w64ucrt-11.0.0-r1/mingw64/share/cmake-3.26/Modules/FindPackageHandleStandardArgs.cmake
+C:/Users/12698/winlibs-x86_64-mcf-seh-gcc-13.1.0-llvm-16.0.2-mingw-w64ucrt-11.0.0-r1/mingw64/share/cmake-3.26/Modules/FindPackageMessage.cmake
+C:/Users/12698/winlibs-x86_64-mcf-seh-gcc-13.1.0-llvm-16.0.2-mingw-w64ucrt-11.0.0-r1/mingw64/share/cmake-3.26/Modules/FindVulkan.cmake
+D:/Desktop/hw3_cse381/HW3/external/CMakeLists.txt

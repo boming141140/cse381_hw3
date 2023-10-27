@@ -1,0 +1,15 @@
+﻿  Compiling blinn_phong.frag
+  Compiling blinn_phong.vert
+  Compiling brdf_lut.frag
+  Compiling brdf_lut.vert
+  Compiling irradiance.frag
+  Compiling irradiance.vert
+  Compiling lights.frag
+  Compiling lights.vert
+  Compiling pbr.frag
+  Compiling pbr.vert
+  Compiling prefilter.frag
+  Compiling prefilter.vert
+  Compiling skybox.frag
+  Compiling skybox.vert
+  Building Custom Rule D:/Desktop/hw3_cse381/HW3/shaders/CMakeLists.txt

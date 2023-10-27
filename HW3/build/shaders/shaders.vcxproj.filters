@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="D:\Desktop\hw3_cse381\HW3\build\CMakeFiles\eded8a664f72f00f582daefe766f2951\blinn_phong.frag.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\Desktop\hw3_cse381\HW3\build\CMakeFiles\eded8a664f72f00f582daefe766f2951\blinn_phong.vert.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\Desktop\hw3_cse381\HW3\build\CMakeFiles\eded8a664f72f00f582daefe766f2951\brdf_lut.frag.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\Desktop\hw3_cse381\HW3\build\CMakeFiles\eded8a664f72f00f582daefe766f2951\brdf_lut.vert.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\Desktop\hw3_cse381\HW3\build\CMakeFiles\eded8a664f72f00f582daefe766f2951\irradiance.frag.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\Desktop\hw3_cse381\HW3\build\CMakeFiles\eded8a664f72f00f582daefe766f2951\irradiance.vert.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\Desktop\hw3_cse381\HW3\build\CMakeFiles\eded8a664f72f00f582daefe766f2951\lights.frag.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\Desktop\hw3_cse381\HW3\build\CMakeFiles\eded8a664f72f00f582daefe766f2951\lights.vert.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\Desktop\hw3_cse381\HW3\build\CMakeFiles\eded8a664f72f00f582daefe766f2951\pbr.frag.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\Desktop\hw3_cse381\HW3\build\CMakeFiles\eded8a664f72f00f582daefe766f2951\pbr.vert.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\Desktop\hw3_cse381\HW3\build\CMakeFiles\eded8a664f72f00f582daefe766f2951\prefilter.frag.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\Desktop\hw3_cse381\HW3\build\CMakeFiles\eded8a664f72f00f582daefe766f2951\prefilter.vert.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\Desktop\hw3_cse381\HW3\build\CMakeFiles\eded8a664f72f00f582daefe766f2951\skybox.frag.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\Desktop\hw3_cse381\HW3\build\CMakeFiles\eded8a664f72f00f582daefe766f2951\skybox.vert.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\Desktop\hw3_cse381\HW3\build\CMakeFiles\86015011da7d2e06fa44bc007e102b10\shaders.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\Desktop\hw3_cse381\HW3\shaders\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="D:\Desktop\hw3_cse381\HW3\build\shaders\CMakeFiles\shaders" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{24118E15-AFEF-327C-8791-CC3C37830BA7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

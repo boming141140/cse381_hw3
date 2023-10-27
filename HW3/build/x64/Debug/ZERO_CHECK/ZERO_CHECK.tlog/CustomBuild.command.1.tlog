@@ -1,0 +1,10 @@
+^D:\DESKTOP\HW3_CSE381\HW3\BUILD\CMAKEFILES\63ECFDF4E918B1E1D46A39D962007E46\GENERATE.STAMP.RULE
+setlocal
+C:\Users\12698\winlibs-x86_64-mcf-seh-gcc-13.1.0-llvm-16.0.2-mingw-w64ucrt-11.0.0-r1\mingw64\bin\cmake.exe -SD:/Desktop/hw3_cse381/HW3 -BD:/Desktop/hw3_cse381/HW3/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file D:/Desktop/hw3_cse381/HW3/build/Wolfie3D.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
