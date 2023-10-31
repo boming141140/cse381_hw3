@@ -37,9 +37,19 @@ enum class KeyCode
 	eA,
 	eD,
 
-	e1,
-	e2,
-	e3,
+	e1, // Player 1
+	e2, // Player 2
+	e3,	// Camera
+	e4,	// Light 1
+	e5, // Light 2
+	e6, // Light 3
+	e7, // Light 4
+	e8, // Player 3
+	e9, // Player 4
+	e0, // Player 5
+
+	eR,        // New entry for R
+	eQ,        // New entry for Q
 };
 
 // THERE ARE FOUR DIFFERENT TYPES OF KEYBOARD KEY INTERACTIONS

@@ -17,6 +17,13 @@ enum class ControllerMode
 	eCamera,
 	ePlayer1,
 	ePlayer2,
+	ePlayer3,
+	ePlayer4,
+	ePlayer5,
+	eLight1,
+	eLight2,
+	eLight3,
+	eLight4,
 };
 
 /*
@@ -26,23 +33,29 @@ enum class ControllerMode
 */
 class Controller
 {
-  private:
+  public:
 	// OUR Controller PROVIDES ACCESS TO ALL THE CONTROLLABLE GAME OBJECTS,
-	// OF WHICH THERE ARE CURRENTLY THREE: THE CAMERA, AND PLAYER 1 AND 
+	// OF WHICH THERE ARE CURRENTLY THREE: THE CAMERA, AND PLAYER 1 AND
 	// PLAYER 2, WHICH ARE REALLY JUST SIMPLY CUBES
-	sg::Node      &camera_;		
-	sg::Node      &player_1;
-	sg::Node      &player_2;
-
+	// ADD PLAYER 3, PLAYER 4, PLAYER 5
+	// ADD LIGHT 1, LIGHT 2, LIGHT 3, LIGHT 4
+	sg::Node &camera_;
+	sg::Node &player_1;
+	sg::Node &player_2;
+	sg::Node &player_3;
+	sg::Node &player_4;
+	sg::Node &player_5;
+	sg::Node &Light_1;
+	sg::Node &Light_2;
+	sg::Node &Light_3;
+	sg::Node &Light_4;
 	// THIS KEEPS TRACK OF WHICH GAME OBJECT WE ARE CURRENTLY CONTROLLING
 	// WITH THIS OBJECT
 	ControllerMode mode_;
-
-  public:
 	/*
 	* Constructor that initializes all the controllable game objects.
 	*/
-	Controller(sg::Node &camera_node, sg::Node &player_1_node, sg::Node &player_2_node);
+	Controller(sg::Node &camera_node, sg::Node &player_1_node, sg::Node &player_2_node, sg::Node &player_3_node, sg::Node &player_4_node, sg::Node &player_5_node, sg::Node &Light_1_node, sg::Node &Light_2_node, sg::Node &Light_3_node, sg::Node &Light_4_node);
 
 	/*
 	* This function handles events. If it's a key event it will provide a programmed

@@ -68,8 +68,27 @@ Renderer::Renderer()
 
 	// OUR SCENE WILL USE THIS GLTF FILE, WHICH IS JUST A TEXTURED CUBE
 	load_scene("2.0/BoxTextured/glTF/HW.gltf");
-
+	load_additional_gltf_object("2.0/BoxTextured/glTF/BoxTextured.gltf", "");
 	// SETUP THE RENDERING RESOURCES
+	size_t      lightNodeId   = 10;        // This should be a unique ID
+	Light_1                   = new sg::Node(lightNodeId++, "Light_1");
+	Light_2                   = new sg::Node(lightNodeId++, "Light_2");
+	Light_3                   = new sg::Node(lightNodeId++, "Light_3");
+	Light_4                   = new sg::Node(lightNodeId++, "Light_4");
+	player_3                  = new sg::Node(lightNodeId++, "player_3");
+	player_4                  = new sg::Node(lightNodeId++, "player_4");
+	player_5                  = new sg::Node(lightNodeId++, "player_5");
+	Light_1->get_transform().set_tranlsation(LIGHT_POSITIONS[0]);
+	Light_2->get_transform().set_tranlsation(LIGHT_POSITIONS[1]);
+	Light_3->get_transform().set_tranlsation(LIGHT_POSITIONS[2]);
+	Light_4->get_transform().set_tranlsation(LIGHT_POSITIONS[3]);
+	p_scene_->add_node(std::unique_ptr<sg::Node>(Light_1));
+	p_scene_->add_node(std::unique_ptr<sg::Node>(Light_2));
+	p_scene_->add_node(std::unique_ptr<sg::Node>(Light_3));
+	p_scene_->add_node(std::unique_ptr<sg::Node>(Light_4));
+	p_scene_->add_node(std::unique_ptr<sg::Node>(player_3));
+	p_scene_->add_node(std::unique_ptr<sg::Node>(player_4));
+	p_scene_->add_node(std::unique_ptr<sg::Node>(player_5));
 	PBRBaker baker(*p_device_);
 	baked_pbr_ = baker.bake();
 	create_rendering_resources();
@@ -136,6 +155,26 @@ void Renderer::process_event(const Event &event)
 	}
 }
 
+void Renderer::light_pos_change()
+{
+	if (p_controller_->mode_ == ControllerMode::eLight1)
+	{
+		LIGHT_POSITIONS[0] = p_controller_->Light_1.get_transform().get_translation();
+	}
+	else if (p_controller_->mode_ == ControllerMode::eLight2)
+	{
+		LIGHT_POSITIONS[1] = p_controller_->Light_2.get_transform().get_translation();
+	}
+	else if (p_controller_->mode_ == ControllerMode::eLight3)
+	{
+		LIGHT_POSITIONS[2] = p_controller_->Light_3.get_transform().get_translation();
+	}
+	else if (p_controller_->mode_ == ControllerMode::eLight4)
+	{
+		LIGHT_POSITIONS[3] = p_controller_->Light_4.get_transform().get_translation();
+	}
+}
+
 void Renderer::load_scene(const char *scene_name)
 {
 	GLTFLoader loader(*p_device_);
@@ -145,13 +184,35 @@ void Renderer::load_scene(const char *scene_name)
 	p_camera_node_->get_component<sg::Transform>().set_tranlsation(glm::vec3(0.0f, 0.0f, 5.0f));
 }
 
+void Renderer::load_additional_gltf_object(const char *file_path, const std::string &parent_node_name)
+{
+	// Use a loader to create the structure for the new glTF object
+	GLTFLoader                loader(*p_device_);
+	std::unique_ptr<sg::Scene> new_object = loader.read_scene_from_file(file_path);
+
+	std::unique_ptr<sg::Node> new_root_node = new_object->release_root_node();
+	// If there is a specified parent node name, find the parent node and attach the new object to it
+	if (!parent_node_name.empty())
+	{
+		sg::Node *parent_node = p_scene_->find_node(parent_node_name);
+		if (parent_node)
+		{
+			parent_node->add_child(new_object->get_root_node());
+		}
+	}
+
+	// Add the new root node to the scene
+	p_scene_->add_node(std::move(new_root_node));
+}
+
 void Renderer::create_controller()
 {
-	p_controller_ = std::make_unique<Controller>(*p_camera_node_, add_player_script("player_1"), add_player_script("player_2"));
+	p_controller_ = std::make_unique<Controller>(*p_camera_node_, add_player_script("player_1"), add_player_script("player_2"), add_player_script("player_3"), add_player_script("player_4"), add_player_script("player_5"), add_player_script("Light_1"), add_player_script("Light_2"), add_player_script("Light_3"), add_player_script("Light_4"));
 }
 
 void Renderer::render_frame()
 {
+	light_pos_change();
 	uint32_t img_idx = sync_acquire_next_image();
 	record_draw_commands(img_idx);
 	sync_submit_commands();
@@ -451,6 +512,7 @@ Renderer::FrameResource &Renderer::get_current_frame_resource()
 	return frame_resources_[frame_idx_];
 };
 
+// add new player and their control
 sg::Node &Renderer::add_player_script(const char *node_name)
 {
 	sg::Node *p_node = p_scene_->find_node(node_name);
@@ -465,6 +527,7 @@ sg::Node &Renderer::add_player_script(const char *node_name)
 
 	return *p_node;
 }
+
 
 void Renderer::create_rendering_resources()
 {
@@ -716,6 +779,10 @@ void Renderer::create_pipeline_resources()
 	pl_state.depth_stencil_state.depth_test_enable  = false;
 	pl_state.depth_stencil_state.depth_write_enable = false;
 	skybox_.p_pl                                    = std::make_unique<GraphicsPipeline>(*p_device_, *p_render_pass_, pl_state, skybox_pl_layout_cinfo);
+}
+
+void Renderer::add_new_player()
+{
 }
 
 }        // namespace W3D

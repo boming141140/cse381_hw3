@@ -9,6 +9,7 @@
 #include "pbr_baker.hpp"
 #include "sync_objects.hpp"
 
+
 /*
 * renderer.hpp - This is the header file for the Renderer class type and structs it uses
 * for this demo. Note that this Wolfie3D demo is just a renderer so this class is rather
@@ -37,6 +38,7 @@ namespace sg
 class PBRMaterial;
 class Texture;
 class Camera;
+
 }        // namespace sg
 
 class Window;
@@ -116,6 +118,13 @@ class Renderer
 	std::unique_ptr<CommandPool>          p_cmd_pool_;
 	std::unique_ptr<sg::Scene>            p_scene_;
 	sg::Node                             *p_camera_node_ = nullptr;
+	sg::Node                             *Light_1        = nullptr;
+	sg::Node                             *Light_2        = nullptr;
+	sg::Node                             *Light_3        = nullptr;
+	sg::Node                             *Light_4        = nullptr;
+	sg::Node                             *player_3       = nullptr;
+	sg::Node                             *player_4       = nullptr;
+	sg::Node                             *player_5       = nullptr;
 	std::unique_ptr<Controller>           p_controller_;
 
 	Timer                      timer_;
@@ -126,6 +135,7 @@ class Renderer
 	PipelineResource           light_;
 	PBR                        baked_pbr_;
 	bool                       is_window_resized_ = false;
+					   
 
   public:
 	/*
@@ -157,6 +167,8 @@ class Renderer
 	*/
 	void process_event(const Event &event);
 
+	void light_pos_change();
+
 	/*
 	* Called once per frame, it updates all scene objects.
 	*/
@@ -186,7 +198,8 @@ class Renderer
 	void           resize();
 	FrameResource &get_current_frame_resource();
 
-	void load_scene(const char *scene_name);
+	void      load_scene(const char *scene_name);
+	void      load_additional_gltf_object(const char *file_path, const std::string &parent_node_name);
 	void create_controller();
 	void create_rendering_resources();
 	void create_frame_resources();
@@ -197,7 +210,7 @@ class Renderer
 	void create_materials_desc_resources();
 	void create_render_pass();
 	void create_pipeline_resources();
-
+	void add_new_player();
 	sg::Node &add_player_script(const char *node_name);
 };
 }        // namespace W3D

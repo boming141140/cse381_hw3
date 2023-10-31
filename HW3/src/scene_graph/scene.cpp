@@ -22,6 +22,22 @@ void Scene::add_child(Node &child)
 	root_->add_child(child);
 }
 
+std::unique_ptr<sg::Node> Scene::release_root_node()
+{
+	// Find the root node in the vector of nodes and remove it, returning ownership to the caller.
+	for (auto iter = p_nodes_.begin(); iter != p_nodes_.end(); ++iter)
+	{
+		if (iter->get() == root_)
+		{
+			std::unique_ptr<sg::Node> root_node = std::move(*iter);
+			p_nodes_.erase(iter);
+			root_ = nullptr;         // Clear the root pointer as it is no longer part of this scene.
+			return root_node;        // Return the unique_ptr, transferring ownership.
+		}
+	}
+	return nullptr;        // In case the root node was not found.
+}
+
 void Scene::add_component(std::unique_ptr<Component> &&pComponent)
 {
 	if (pComponent)

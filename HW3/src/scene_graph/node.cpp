@@ -65,6 +65,7 @@ sg::Transform &Node::get_transform() const
 	return dynamic_cast<sg::Transform &>(*components_.at(typeid(sg::Transform)));
 }
 
+
 bool Node::has_component(const std::type_index index)
 {
 	return components_.count(index) > 0;

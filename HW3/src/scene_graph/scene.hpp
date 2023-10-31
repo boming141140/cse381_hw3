@@ -51,7 +51,8 @@ class Scene
 	}
 
 	void  add_node(std::unique_ptr<Node> &&pNode);
-	void  add_child(Node &child);
+	void                      add_child(Node &child);
+	std::unique_ptr<sg::Node> release_root_node();
 	void  set_root_node(Node &node);
 	void  set_nodes(std::vector<std::unique_ptr<Node>> &&nodes);
 	Node *find_node(const std::string &name);
