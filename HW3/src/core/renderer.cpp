@@ -430,9 +430,10 @@ void Renderer::draw_lights(CommandBuffer &cmd_buf)
 	    {});
 
 	glm::mat4 scaled_m = glm::scale(glm::mat4(1.0f), glm::vec3(0.3f));
+	glm::mat4 z_up_rotation = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
 	for (int i = 0; i < NUM_LIGHTS; i++)
 	{
-		glm::mat4 world_m = glm::translate(scaled_m, LIGHT_POSITIONS[i]);
+		glm::mat4 world_m = glm::translate(z_up_rotation * scaled_m, LIGHT_POSITIONS[i]);
 
 		cmd_buf.get_handle().pushConstants<glm::mat4>(pl_layout, vk::ShaderStageFlagBits::eVertex, 0, world_m);
 
