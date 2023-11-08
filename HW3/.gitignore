@@ -1,4 +1,5 @@
 lib/
+.build/
 .vscode/
 .cache/
 windows.env.cmake
