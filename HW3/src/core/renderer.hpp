@@ -201,6 +201,7 @@ class Renderer
 	FrameResource &get_current_frame_resource();
 
 	void      load_scene(const char *scene_name);
+	void      reload_scene(const char *scene_name);
 	void      load_additional_gltf_object(const char *file_path);
 	void create_controller();
 	void create_rendering_resources();

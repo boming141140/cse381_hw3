@@ -181,6 +181,35 @@ void Renderer::load_scene(const char *scene_name)
 	
 }
 
+void Renderer::reload_scene(const char *scene_name)
+{
+	GLTFLoader loader(*p_device_);
+	p_scene_                   = loader.read_scene_from_file(scene_name);
+	vk::Extent2D window_extent = p_window_->get_extent();
+	p_camera_node_             = add_free_camera_script(*p_scene_, "main_camera", window_extent.width, window_extent.height);
+	p_camera_node_->get_component<sg::Transform>().set_tranlsation(glm::vec3(0.0f, 0.0f, 5.0f));
+	size_t lightNodeId = 10;
+	Light_1            = new sg::Node(lightNodeId++, "Light_1");
+	Light_2            = new sg::Node(lightNodeId++, "Light_2");
+	Light_3            = new sg::Node(lightNodeId++, "Light_3");
+	Light_4            = new sg::Node(lightNodeId++, "Light_4");
+	Light_1->get_transform().set_tranlsation(LIGHT_POSITIONS[0]);
+	Light_2->get_transform().set_tranlsation(LIGHT_POSITIONS[1]);
+	Light_3->get_transform().set_tranlsation(LIGHT_POSITIONS[2]);
+	Light_4->get_transform().set_tranlsation(LIGHT_POSITIONS[3]);
+	p_scene_->add_node(std::unique_ptr<sg::Node>(Light_1));
+	p_scene_->add_node(std::unique_ptr<sg::Node>(Light_2));
+	p_scene_->add_node(std::unique_ptr<sg::Node>(Light_3));
+	p_scene_->add_node(std::unique_ptr<sg::Node>(Light_4));
+	PBRBaker baker(*p_device_);
+	baked_pbr_ = baker.bake();
+	create_rendering_resources();
+	p_sframe_buffer_ = std::make_unique<SwapchainFramebuffer>(*p_device_, *p_swapchain_, *p_render_pass_);
+	this->timer_creation   = 0;
+	create_controller();
+	p_controller_->insert_render(*this);
+}
+
 void Renderer::load_additional_gltf_object(const char *file_path)
 {
 	if (this->timer_creation < 3.0f)

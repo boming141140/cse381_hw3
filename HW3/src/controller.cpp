@@ -36,9 +36,9 @@ void Controller::process_event(const Event &event)
 			this->render->add_new_player();
 			return;
 		}
-		else if (key_input_event.code == KeyCode::eR)
+		else if (key_input_event.code == KeyCode::eR && key_input_event.action == KeyAction::eDown)
 		{
-			this->render->load_scene("2.0/BoxTextured/glTF/HW.gltf");
+			this->render->reload_scene("2.0/BoxTextured/glTF/HW.gltf");
 			return;
 		}
 		else if (key_input_event.code > KeyCode::eD)
