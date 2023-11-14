@@ -1,2 +1,17 @@
-﻿  renderer.cpp
+﻿  utils.cpp
+  controller.cpp
+  renderer.cpp
+  window.cpp
+  gltf_loader.cpp
+  main.cpp
+  camera.cpp
+  mesh.cpp
+  transform.cpp
+  node.cpp
+  scene.cpp
+  script.cpp
+  free_camera.cpp
+  player.cpp
+  Generating Code...
+  LINK : D:\Desktop\hw3_cse381\HW3\build\Debug\Wolfie3D.exe not found or not built by the last incremental link; performing full link
   Wolfie3D.vcxproj -> D:\Desktop\hw3_cse381\HW3\build\Debug\Wolfie3D.exe

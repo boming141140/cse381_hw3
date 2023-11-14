@@ -1,0 +1,6 @@
+build/
+lib/
+.vscode/
+.cache/
+windows.env.cmake
+unix.env.cmake
