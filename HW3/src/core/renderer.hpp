@@ -202,6 +202,7 @@ class Renderer
 
 	void      load_scene(const char *scene_name);
 	void      reload_scene(const char *scene_name);
+	void      add_prymaid(sg::Node &node);
 	void      load_additional_gltf_object(const char *file_path);
 	void create_controller();
 	void create_rendering_resources();
