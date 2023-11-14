@@ -89,6 +89,18 @@ Node *Scene::find_node(const std::string &name)
 	return nullptr;
 }
 
+std::unique_ptr<sg::Node> Scene::find_node_by_index(int index)
+{
+	if (index < 0 || index >= p_nodes_.size())
+	{
+		return nullptr;        // Index out of bounds
+	}
+
+	auto it = p_nodes_.begin();
+	std::advance(it, index);
+	return std::move(*it);
+}
+
 const std::vector<std::unique_ptr<Component>> &Scene::get_components(
     const std::type_index &type) const
 {
@@ -98,5 +110,24 @@ const std::vector<std::unique_ptr<Component>> &Scene::get_components(
 bool Scene::has_component(const std::type_index &type) const
 {
 	return p_components_.count(type) > 0;
+}
+
+ void Scene::transfer_components_to(Scene &target)
+{
+	for (auto &type_components_pair : p_components_)
+	{
+		const std::type_index &type       = type_components_pair.first;
+		auto                  &components = type_components_pair.second;
+
+		// Move each component from this scene to the target scene
+		while (!components.empty())
+		{
+			std::unique_ptr<Component> comp = std::move(components.back());
+			components.pop_back();        // Remove the component from this scene's vector
+
+			target.add_component(std::move(comp));
+		}
+	}
+	p_components_.clear();        // Clear the components map in this scene
 }
 }        // namespace W3D::sg

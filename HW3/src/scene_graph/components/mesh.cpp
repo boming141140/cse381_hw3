@@ -41,4 +41,19 @@ const std::vector<Node *> &Mesh::get_p_nodes() const
 {
 	return p_nodes;
 }
+
+void Mesh::clear_submeshes()
+{
+	for (sg::SubMesh *submesh : p_submeshs)
+	{
+		delete submesh;           // Delete the dynamically allocated SubMesh object
+		submesh = nullptr;        // Set the pointer to nullptr (optional but good practice)
+	}
+	p_submeshs.clear();        // Clear the vector of pointers
+}
+void Mesh::set_submeshes(const std::vector<SubMesh *> &newSubmeshes)
+{
+	p_submeshs = newSubmeshes;
+}
 }        // namespace W3D::sg
+

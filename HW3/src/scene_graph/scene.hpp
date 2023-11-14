@@ -55,7 +55,8 @@ class Scene
 	std::unique_ptr<sg::Node> release_root_node();
 	void  set_root_node(Node &node);
 	void  set_nodes(std::vector<std::unique_ptr<Node>> &&nodes);
-	Node *find_node(const std::string &name);
+	Node                     *find_node(const std::string &name);
+	std::unique_ptr<sg::Node> find_node_by_index(int index);
 	void  add_component_to_node(std::unique_ptr<Component> &&pComponent, Node &node);
 
 	template <typename T>
@@ -94,6 +95,8 @@ class Scene
 		return has_component(typeid(T));
 	}
 	bool has_component(const std::type_index &type) const;
+
+	void transfer_components_to(Scene &target);
 
 	Node &get_root_node();
 };

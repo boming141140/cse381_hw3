@@ -95,6 +95,8 @@ class Node
 	 */
 	bool has_component(const std::type_index index);
 
+	void set_name(const std::string &newName);
+
 	/*
 	* Adds a node as a child to this node.
 	*/
