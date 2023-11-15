@@ -67,17 +67,15 @@ Renderer::Renderer()
 	p_swapchain_        = std::make_unique<Swapchain>(*p_device_, p_window_->get_extent());
 
 	// OUR SCENE WILL USE THIS GLTF FILE, WHICH IS JUST A TEXTURED CUBE
+	//load_scene("2.0/BoxTextured/glTF/BoxTextured.gltf");
 	load_scene("2.0/BoxTextured/glTF/HW.gltf");
-	load_additional_gltf_object("2.0/BoxTextured/glTF/BoxTextured.gltf", "");
+	//load_additional_gltf_object("2.0/BoxTextured/glTF/BoxTextured.gltf");
 	// SETUP THE RENDERING RESOURCES
-	size_t      lightNodeId   = 10;        // This should be a unique ID
+	size_t      lightNodeId   = 10;        
 	Light_1                   = new sg::Node(lightNodeId++, "Light_1");
 	Light_2                   = new sg::Node(lightNodeId++, "Light_2");
 	Light_3                   = new sg::Node(lightNodeId++, "Light_3");
 	Light_4                   = new sg::Node(lightNodeId++, "Light_4");
-	player_3                  = new sg::Node(lightNodeId++, "player_3");
-	player_4                  = new sg::Node(lightNodeId++, "player_4");
-	player_5                  = new sg::Node(lightNodeId++, "player_5");
 	Light_1->get_transform().set_tranlsation(LIGHT_POSITIONS[0]);
 	Light_2->get_transform().set_tranlsation(LIGHT_POSITIONS[1]);
 	Light_3->get_transform().set_tranlsation(LIGHT_POSITIONS[2]);
@@ -86,9 +84,6 @@ Renderer::Renderer()
 	p_scene_->add_node(std::unique_ptr<sg::Node>(Light_2));
 	p_scene_->add_node(std::unique_ptr<sg::Node>(Light_3));
 	p_scene_->add_node(std::unique_ptr<sg::Node>(Light_4));
-	p_scene_->add_node(std::unique_ptr<sg::Node>(player_3));
-	p_scene_->add_node(std::unique_ptr<sg::Node>(player_4));
-	p_scene_->add_node(std::unique_ptr<sg::Node>(player_5));
 	PBRBaker baker(*p_device_);
 	baked_pbr_ = baker.bake();
 	create_rendering_resources();
@@ -101,6 +96,7 @@ Renderer::~Renderer(){};
 
 void Renderer::start()
 {
+	p_controller_->insert_render(*this);
 	main_loop();
 	timer_.start();
 }
@@ -180,34 +176,101 @@ void Renderer::load_scene(const char *scene_name)
 	GLTFLoader loader(*p_device_);
 	p_scene_                   = loader.read_scene_from_file(scene_name);
 	vk::Extent2D window_extent = p_window_->get_extent();
+	add_prymaid(*p_scene_->get_root_node().get_children().front()->get_children()[0]);
+	add_prymaid(*p_scene_->get_root_node().get_children().front()->get_children()[1]);
 	p_camera_node_             = add_free_camera_script(*p_scene_, "main_camera", window_extent.width, window_extent.height);
 	p_camera_node_->get_component<sg::Transform>().set_tranlsation(glm::vec3(0.0f, 0.0f, 5.0f));
+	
 }
 
-void Renderer::load_additional_gltf_object(const char *file_path, const std::string &parent_node_name)
+void Renderer::reload_scene(const char *scene_name)
 {
-	// Use a loader to create the structure for the new glTF object
-	GLTFLoader                loader(*p_device_);
-	std::unique_ptr<sg::Scene> new_object = loader.read_scene_from_file(file_path);
-
-	std::unique_ptr<sg::Node> new_root_node = new_object->release_root_node();
-	// If there is a specified parent node name, find the parent node and attach the new object to it
-	if (!parent_node_name.empty())
+	GLTFLoader loader(*p_device_);
+	p_scene_                   = loader.read_scene_from_file(scene_name);
+	vk::Extent2D window_extent = p_window_->get_extent();
+	add_prymaid(*p_scene_->get_root_node().get_children().front()->get_children()[0]);
+	add_prymaid(*p_scene_->get_root_node().get_children().front()->get_children()[1]);
+	p_camera_node_             = add_free_camera_script(*p_scene_, "main_camera", window_extent.width, window_extent.height);
+	p_camera_node_->get_component<sg::Transform>().set_tranlsation(glm::vec3(0.0f, 0.0f, 5.0f));
+	size_t lightNodeId = 10;
+	Light_1            = new sg::Node(lightNodeId++, "Light_1");
+	Light_2            = new sg::Node(lightNodeId++, "Light_2");
+	Light_3            = new sg::Node(lightNodeId++, "Light_3");
+	Light_4            = new sg::Node(lightNodeId++, "Light_4");
+	Light_1->get_transform().set_tranlsation(LIGHT_POSITIONS[0]);
+	Light_2->get_transform().set_tranlsation(LIGHT_POSITIONS[1]);
+	Light_3->get_transform().set_tranlsation(LIGHT_POSITIONS[2]);
+	Light_4->get_transform().set_tranlsation(LIGHT_POSITIONS[3]);
+	p_scene_->add_node(std::unique_ptr<sg::Node>(Light_1));
+	p_scene_->add_node(std::unique_ptr<sg::Node>(Light_2));
+	p_scene_->add_node(std::unique_ptr<sg::Node>(Light_3));
+	p_scene_->add_node(std::unique_ptr<sg::Node>(Light_4));
+	PBRBaker baker(*p_device_);
+	baked_pbr_ = baker.bake();
+	create_rendering_resources();
+	p_sframe_buffer_ = std::make_unique<SwapchainFramebuffer>(*p_device_, *p_swapchain_, *p_render_pass_);
+	this->timer_creation   = 0;
+	create_controller();
+	p_controller_->insert_render(*this);
+}
+void Renderer::add_prymaid(sg::Node &node)
+{
+	GLTFLoader                 loader(*p_device_);
+	std::unique_ptr<sg::Scene> pyramid = loader.read_scene_from_file("2.0/BoxTextured/glTF/prymaid.gltf");
+	std::unique_ptr<sg::Node>  new_object_node_1 = pyramid->find_node_by_index(0);
+	glm::vec3                  temp_scale        = new_object_node_1->get_component<sg::Transform>().get_scale();
+	float                      angle             = glm::radians(90.0f);        // Convert degrees to radians
+	glm::vec3                  axis              = glm::vec3(1, 0, 0);         // Rotate around the Z-axis
+	glm::quat                  rotation_         = glm::angleAxis(angle, axis);
+	pyramid->transfer_components_to(*p_scene_);
+	glm::vec3 new_delta_translation = glm::vec3(0.0f, 2.0f, 0.0f);
+	new_object_node_1->set_parent(node);
+	new_object_node_1->get_transform().set_tranlsation(new_delta_translation);
+	new_object_node_1->get_transform().set_scale(temp_scale*0.1f);
+	new_object_node_1->get_transform().set_rotation(rotation_);
+	node.add_child(*new_object_node_1);
+	p_scene_->add_node(std::move(new_object_node_1));
+}
+void Renderer::load_additional_gltf_object(const char *file_path)
+{
+	if (this->timer_creation < 3.0f)
 	{
-		sg::Node *parent_node = p_scene_->find_node(parent_node_name);
-		if (parent_node)
-		{
-			parent_node->add_child(new_object->get_root_node());
-		}
-	}
+		// Use a loader to create the structure for the new glTF object
+		GLTFLoader                 loader(*p_device_);
+		std::unique_ptr<sg::Scene> scene_1           = loader.read_scene_from_file(file_path);
+		std::unique_ptr<sg::Node>  new_object_node_1 = scene_1->find_node_by_index(1);
 
-	// Add the new root node to the scene
-	p_scene_->add_node(std::move(new_root_node));
+		scene_1->transfer_components_to(*p_scene_);
+		new_object_node_1->set_parent(*p_scene_->get_root_node().get_children().front());
+		glm::vec3 new_delta_translation = (this->delta_translation) * (this->timer_creation+=1);
+		new_object_node_1->get_transform().set_tranlsation(new_object_node_1->get_transform().get_translation() + new_delta_translation);
+		new_object_node_1->set_name("player_" + std::to_string(static_cast<int>(2 + timer_creation)));
+		add_prymaid(*new_object_node_1);
+		p_scene_->get_root_node().get_children().front()->add_child(*new_object_node_1);
+		p_scene_->add_node(std::move(new_object_node_1));
+
+		if (timer_creation == 1)
+		{
+			p_controller_->insert_player_3(add_player_script("player_3"));
+		}
+		else if (timer_creation == 2)
+		{
+			p_controller_->insert_player_4(add_player_script("player_4"));
+		}
+		else
+		{
+			p_controller_->insert_player_5(add_player_script("player_5"));
+		}
+		PBRBaker baker(*p_device_);
+		baked_pbr_ = baker.bake();
+		create_rendering_resources();
+		p_sframe_buffer_ = std::make_unique<SwapchainFramebuffer>(*p_device_, *p_swapchain_, *p_render_pass_);
+	}
 }
 
 void Renderer::create_controller()
 {
-	p_controller_ = std::make_unique<Controller>(*p_camera_node_, add_player_script("player_1"), add_player_script("player_2"), add_player_script("player_3"), add_player_script("player_4"), add_player_script("player_5"), add_player_script("Light_1"), add_player_script("Light_2"), add_player_script("Light_3"), add_player_script("Light_4"));
+	p_controller_ = std::make_unique<Controller>(*p_camera_node_, add_player_script("player_1"), add_player_script("player_2"), add_player_script("Light_1"), add_player_script("Light_2"), add_player_script("Light_3"), add_player_script("Light_4"));
 }
 
 void Renderer::render_frame()
@@ -486,7 +549,7 @@ void Renderer::push_node_model_matrix(CommandBuffer &cmd_buf, sg::Node *p_node)
 	BlinnPhongPCO pco{
 	    .model        = p_node->get_component<sg::Transform>().get_world_M(),
 	    .cam_pos      = p_camera_node_->get_component<sg::Transform>().get_translation(),
-	    .is_colliding = p_controller_->are_players_colliding(),
+	    .is_colliding = p_controller_->are_players_colliding(*p_node),
 	};
 	cmd_buf.get_handle().pushConstants<BlinnPhongPCO>(blinn_phong_.p_pl->get_pipeline_layout(), vk::ShaderStageFlagBits::eVertex | vk::ShaderStageFlagBits::eFragment, 0, pco);
 }        // namespace W3D
@@ -784,6 +847,7 @@ void Renderer::create_pipeline_resources()
 
 void Renderer::add_new_player()
 {
+	load_additional_gltf_object("2.0/BoxTextured/glTF/BoxTextured.gltf");
 }
 
 }        // namespace W3D

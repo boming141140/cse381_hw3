@@ -4,9 +4,11 @@ namespace W3D
 {
 struct Event;
 enum class KeyCode;
+class Renderer;
 namespace sg
 {
 class Node;
+
 }
 
 /*
@@ -23,7 +25,8 @@ enum class ControllerMode
 	eLight1,
 	eLight2,
 	eLight3,
-	eLight4,
+	eLight4
+	
 };
 
 /*
@@ -42,20 +45,21 @@ class Controller
 	sg::Node &camera_;
 	sg::Node &player_1;
 	sg::Node &player_2;
-	sg::Node &player_3;
-	sg::Node &player_4;
-	sg::Node &player_5;
 	sg::Node &Light_1;
 	sg::Node &Light_2;
 	sg::Node &Light_3;
 	sg::Node &Light_4;
+	Renderer  *render;
+	sg::Node  *player_3 = nullptr;
+	sg::Node  *player_4 = nullptr;
+	sg::Node  *player_5 = nullptr;
 	// THIS KEEPS TRACK OF WHICH GAME OBJECT WE ARE CURRENTLY CONTROLLING
 	// WITH THIS OBJECT
 	ControllerMode mode_;
 	/*
 	* Constructor that initializes all the controllable game objects.
 	*/
-	Controller(sg::Node &camera_node, sg::Node &player_1_node, sg::Node &player_2_node, sg::Node &player_3_node, sg::Node &player_4_node, sg::Node &player_5_node, sg::Node &Light_1_node, sg::Node &Light_2_node, sg::Node &Light_3_node, sg::Node &Light_4_node);
+	Controller(sg::Node &camera_node, sg::Node &player_1_node, sg::Node &player_2_node, sg::Node &Light_1_node, sg::Node &Light_2_node, sg::Node &Light_3_node, sg::Node &Light_4_node);
 
 	/*
 	* This function handles events. If it's a key event it will provide a programmed
@@ -83,8 +87,13 @@ class Controller
 	* are not implementing any physics in this application so keeping it here keeps
 	* it simple.
 	*/
-	bool are_players_colliding();
+	bool are_players_colliding(sg::Node &node);
 
+	void insert_render(Renderer &render);
+
+	void insert_player_3(sg::Node &new_player_3);
+	void insert_player_4(sg::Node &new_player_4);
+	void insert_player_5(sg::Node &new_player_5);
 };	// class Controller
 
 }	// namespace W3D

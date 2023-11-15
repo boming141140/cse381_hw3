@@ -71,4 +71,9 @@ bool Node::has_component(const std::type_index index)
 	return components_.count(index) > 0;
 }
 
+void Node::set_name(const std::string &newName)
+{
+	name_ = newName;
+}
+
 }	// namespace W3D::sg

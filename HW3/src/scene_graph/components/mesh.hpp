@@ -66,7 +66,11 @@ class Mesh : public Component
 	/*
 	* Accessor method for getting the nodes associated with this mesh's submeshes.
 	*/
-	const std::vector<Node *>    &get_p_nodes() const;
+	const std::vector<Node *> &get_p_nodes() const;
+
+	void clear_submeshes();
+
+	void set_submeshes(const std::vector<SubMesh *> &newSubmeshes);
 
 };	// class Mesh
 

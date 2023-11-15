@@ -125,6 +125,7 @@ class Renderer
 	sg::Node                             *player_3       = nullptr;
 	sg::Node                             *player_4       = nullptr;
 	sg::Node                             *player_5       = nullptr;
+	std::unique_ptr<sg::Node>             new_box        = nullptr; 
 	std::unique_ptr<Controller>           p_controller_;
 
 	Timer                      timer_;
@@ -135,7 +136,8 @@ class Renderer
 	PipelineResource           light_;
 	PBR                        baked_pbr_;
 	bool                       is_window_resized_ = false;
-					   
+	glm::vec3                  delta_translation  = glm::vec3(0.0f, 0.0f, 3.0f);
+	float                  timer_creation     = 0; 
 
   public:
 	/*
@@ -199,7 +201,9 @@ class Renderer
 	FrameResource &get_current_frame_resource();
 
 	void      load_scene(const char *scene_name);
-	void      load_additional_gltf_object(const char *file_path, const std::string &parent_node_name);
+	void      reload_scene(const char *scene_name);
+	void      add_prymaid(sg::Node &node);
+	void      load_additional_gltf_object(const char *file_path);
 	void create_controller();
 	void create_rendering_resources();
 	void create_frame_resources();
