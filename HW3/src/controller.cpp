@@ -8,6 +8,8 @@
 #include "scene_graph/node.hpp"
 #include "scene_graph/script.hpp"
 #include "core/renderer.hpp"
+#include "scene_graph/scripts/player.hpp"
+using namespace W3D::sg;
 
 namespace W3D
 {
@@ -56,15 +58,25 @@ void Controller::process_event(const Event &event)
 
 void Controller::switch_mode(KeyCode code)
 {
+	player_shut_off();
+	sg::Script *p_script;
 	// THE 1 KEY SWITCHES CONTROL TO THE PLAYER 1 CUBE
 	if (code == KeyCode::e1)
 	{
 		mode_ = ControllerMode::ePlayer1;
+		p_script               = &player_1.get_component<sg::Script>();
+		sg::Script *p_script_1 = &player_1.get_component<sg::Script>();
+		Player     *p_player_1 = dynamic_cast<Player *>(p_script_1);
+		p_player_1->toggle_select_on();
 	}
 	// THE 2 KEY SWITCHES CONTROL TO THE PLAYER 2 CUBE
 	else if (code == KeyCode::e2)
 	{
 		mode_ = ControllerMode::ePlayer2;
+		p_script               = &player_2.get_component<sg::Script>();
+		sg::Script *p_script_2 = &player_2.get_component<sg::Script>();
+		Player     *p_player_2 = dynamic_cast<Player *>(p_script_2);
+		p_player_2->toggle_select_on();
 	}
 	// THE 3 KEY SWITCHES CONTROL TO THE CAMERA 
 	else if (code == KeyCode::e3)
@@ -95,16 +107,28 @@ void Controller::switch_mode(KeyCode code)
 	else if (code == KeyCode::e8)
 	{
 		mode_ = ControllerMode::ePlayer3;
+		p_script               = &player_3->get_component<sg::Script>();
+		sg::Script *p_script_3 = &player_3->get_component<sg::Script>();
+		Player     *p_player_3 = dynamic_cast<Player *>(p_script_3);
+		p_player_3->toggle_select_on();
 	}
 	// THE 9 KEY SWITCHES CONTROL TO THE PLAYER 4 CUBE
 	else if (code == KeyCode::e9)
 	{
 		mode_ = ControllerMode::ePlayer4;
+		p_script               = &player_4->get_component<sg::Script>();
+		sg::Script *p_script_4 = &player_4->get_component<sg::Script>();
+		Player     *p_player_4 = dynamic_cast<Player *>(p_script_4);
+		p_player_4->toggle_select_on();
 	}
 	// THE 0 KEY SWITCHES CONTROL TO THE PLAYER 5 CUBE
 	else if (code == KeyCode::e0)
 	{
 		mode_ = ControllerMode::ePlayer5;
+		p_script               = &player_5->get_component<sg::Script>();
+		sg::Script *p_script_5 = &player_5->get_component<sg::Script>();
+		Player     *p_player_5 = dynamic_cast<Player *>(p_script_5);
+		p_player_5->toggle_select_on();
 	}
 	
 }
@@ -113,6 +137,7 @@ void Controller::deliver_event(const Event &event)
 {
 	// NOTIFY THE ASSOCIATED SCRIPT FOR THE GAME OBJECT SO IT CAN PROVIDE
 	// A FURTHER REPONSE. FIRST GET THE ASSOCIATED SCRIPT
+	
 	sg::Script *p_script;
 	if (mode_ == ControllerMode::ePlayer1)
 	{
@@ -162,6 +187,48 @@ void Controller::deliver_event(const Event &event)
 	p_script->process_event(event);
 }
 
+void Controller::player_shut_off()
+{
+	sg::Script *p_script_1 = &player_1.get_component<sg::Script>();
+	sg::Script *p_script_2 = &player_2.get_component<sg::Script>();
+
+	Player *p_player_1 = dynamic_cast<Player *>(p_script_1);
+	Player *p_player_2 = dynamic_cast<Player *>(p_script_2);
+	if (player_5)
+	{
+		sg::Script *p_script_3 = &player_3->get_component<sg::Script>();
+		sg::Script *p_script_4 = &player_4->get_component<sg::Script>();
+		sg::Script *p_script_5 = &player_5->get_component<sg::Script>();
+
+		Player *p_player_3 = dynamic_cast<Player *>(p_script_3);
+		Player *p_player_4 = dynamic_cast<Player *>(p_script_4);
+		Player *p_player_5 = dynamic_cast<Player *>(p_script_5);
+		p_player_3->toggle_select_off();
+		p_player_4->toggle_select_off();
+		p_player_5->toggle_select_off();
+	}
+	if (player_4)
+	{
+		sg::Script *p_script_3 = &player_3->get_component<sg::Script>();
+		sg::Script *p_script_4 = &player_4->get_component<sg::Script>();
+
+		Player *p_player_3 = dynamic_cast<Player *>(p_script_3);
+		Player *p_player_4 = dynamic_cast<Player *>(p_script_4);
+
+		p_player_3->toggle_select_off();
+		p_player_4->toggle_select_off();
+	}
+	if (player_3)
+	{
+		sg::Script *p_script_3 = &player_3->get_component<sg::Script>();
+
+		Player *p_player_3 = dynamic_cast<Player *>(p_script_3);
+
+		p_player_3->toggle_select_off();
+	}
+	p_player_1->toggle_select_off();
+	p_player_2->toggle_select_off();
+}
 bool Controller::are_players_colliding(sg::Node &node)
 {
 	glm::mat4 p1_M              = player_1.get_transform().get_world_M();
