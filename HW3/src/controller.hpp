@@ -87,6 +87,7 @@ class Controller
 	* are not implementing any physics in this application so keeping it here keeps
 	* it simple.
 	*/
+	void player_shut_off();
 	bool are_players_colliding(sg::Node &node);
 
 	void insert_render(Renderer &render);

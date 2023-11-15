@@ -36,6 +36,11 @@ void Player::update(float delta_time)
 	{
 		delta_translation.x += TRANSLATION_MOVE_STEP;
 	}
+	
+	if (selected && get_node().get_children().size() != 0)
+	{
+		pryamid_rotate(delta_time);
+	}
 
 	// WE NEED TO SCALE BECAUSE WE HAVE A VARIABLE TIMER
 	delta_translation *= speed_multiplier_ * delta_time;
@@ -54,7 +59,36 @@ void Player::update(float delta_time)
 	
 	
 }
+void Player::pryamid_rotate(float delta_time)
+{
+	auto     &temp1            = get_node();
+	auto &temp = get_node().get_children()[0];
+	double    rotationAngle    = 0.0;
+	glm::vec3 center           = glm::vec3(0);
+	glm::vec3 pyramid_location = get_node().get_children()[0]->get_transform().get_translation();
+	double    rotationSpeed    = 1;
 
+	// Update the rotation angle
+	rotationAngle += rotationSpeed * delta_time;
+
+	// Calculate the radius of the orbit
+	glm::vec3 orbitVector = pyramid_location - center;
+	float     radius      = glm::length(orbitVector);
+
+	// Calculate the current angle
+	float currentAngle = atan2(orbitVector.y, orbitVector.x);
+
+	// Update the angle with the rotation
+	float newAngle = currentAngle + rotationAngle;
+
+	// Calculate new position
+	glm::vec3 newPyramidLocation;
+	newPyramidLocation.x = center.x + radius * cos(newAngle);
+	newPyramidLocation.y = center.y + radius * sin(newAngle);        // Assuming the rotation is in the XZ plane
+	newPyramidLocation.z = pyramid_location.z;    
+
+	get_node().get_children()[0]->get_transform().set_tranlsation(newPyramidLocation);
+}
 void Player::process_event(const Event &event)
 {
 	if (event.type == EventType::eKeyInput)
@@ -71,7 +105,18 @@ void Player::process_event(const Event &event)
 		{
 			key_pressed_[key_event.code] = false;
 		}
+
 	}
+}
+
+void Player::toggle_select_off()
+{
+	selected = false;
+}
+
+void Player::toggle_select_on()
+{
+	selected = true;
 }
 
 }	// namespace W3D::sg

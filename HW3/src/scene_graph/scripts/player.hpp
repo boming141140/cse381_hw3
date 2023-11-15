@@ -13,7 +13,7 @@ class Player : public NodeScript
   private:
 	float speed_multiplier_ = 2.0f;
 	std::unordered_map<KeyCode, bool> key_pressed_;
-
+	bool                              selected = false;
   public:
 	static const float TRANSLATION_MOVE_STEP;
 
@@ -28,12 +28,15 @@ class Player : public NodeScript
 	*/
 	void update(float delta_time) override;
 
+	void pryamid_rotate(float delta_time);
+
 	/*
 	* When the player is the active object that can be moved it will be asked to
 	* respond to events like key presses.
 	*/
 	void process_event(const Event &event) override;
-
+	void toggle_select_on();
+	void toggle_select_off();
 };	// class Player
 
 }	// namespace W3D::sg
