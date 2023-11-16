@@ -43,7 +43,7 @@ void Controller::process_event(const Event &event)
 			this->render->reload_scene("2.0/BoxTextured/glTF/HW.gltf");
 			return;
 		}
-		else if (key_input_event.code > KeyCode::eD)
+		else if (key_input_event.code > KeyCode::eD && key_input_event.action == KeyAction::eDown)
 		{
 			switch_mode(key_input_event.code);
 			return;
