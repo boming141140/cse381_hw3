@@ -231,6 +231,66 @@ void Renderer::add_prymaid(sg::Node &node)
 	node.add_child(*new_object_node_1);
 	p_scene_->add_node(std::move(new_object_node_1));
 }
+
+void Renderer::on_shoot()
+{
+	glm::vec3 playerPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+	if (p_controller_->mode_ == ControllerMode::ePlayer1)
+	{
+		playerPosition = p_controller_->player_1.get_transform().get_translation();
+		shoot_bullet(playerPosition);
+	}
+	else if (p_controller_->mode_ == ControllerMode::ePlayer2)
+	{
+		playerPosition = p_controller_->player_2.get_transform().get_translation();
+		shoot_bullet(playerPosition);
+	}
+	else if (p_controller_->mode_ == ControllerMode::ePlayer3)
+	{
+		//playerPosition = p_controller_->player_3.get_transform().get_translation();
+		shoot_bullet(playerPosition);
+	}
+	else if (p_controller_->mode_ == ControllerMode::ePlayer4)
+	{
+		//playerPosition = p_controller_->player_4.get_transform().get_translation();
+		shoot_bullet(playerPosition);
+	}
+	else if (p_controller_->mode_ == ControllerMode::ePlayer5)
+	{
+		//playerPosition = p_controller_->player_5.get_transform().get_translation();
+		shoot_bullet(playerPosition);
+	}
+}
+void Renderer::shoot_bullet(glm::vec3 playerPos)
+{
+	glm::vec3 playerPosition = playerPos;
+
+	sg::Camera                 &camera          = p_camera_node_->get_component<sg::Camera>();
+	glm::mat4                  viewMatrix = camera.get_view();
+	glm::vec3                  cameraDirection = glm::normalize(glm::vec3(viewMatrix[0][2], viewMatrix[1][2], viewMatrix[2][2]));
+	GLTFLoader                 loader(*p_device_);
+	std::unique_ptr<sg::Scene> bulletScene = loader.read_scene_from_file("2.0/BoxTextured/glTF/Bullet.gltf");
+	std::unique_ptr<sg::Node>   bulletNode  = bulletScene->find_node_by_index(0);
+	glm::vec3                   temp_scale  = bulletNode->get_component<sg::Transform>().get_scale();
+
+	bulletScene->transfer_components_to(*p_scene_);
+	bulletNode->set_parent(*p_scene_->get_root_node().get_children().front());
+
+	bulletNode->get_transform().set_tranlsation(playerPosition);
+
+	bulletNode->get_transform().set_rotation(cameraDirection);
+	bulletNode->get_transform().set_scale(temp_scale * 0.1f);
+
+	// Add the bullet to the scene
+	p_scene_->get_root_node().get_children().front()->add_child(*bulletNode);
+	p_scene_->add_node(std::move(bulletNode));
+
+	PBRBaker baker(*p_device_);
+	baked_pbr_ = baker.bake();
+	create_rendering_resources();
+	p_sframe_buffer_ = std::make_unique<SwapchainFramebuffer>(*p_device_, *p_swapchain_, *p_render_pass_);
+}
+
 void Renderer::load_additional_gltf_object(const char *file_path)
 {
 	if (this->timer_creation < 3.0f)

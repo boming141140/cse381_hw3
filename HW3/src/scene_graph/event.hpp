@@ -50,6 +50,7 @@ enum class KeyCode
 
 	eR,        // New entry for R
 	eQ,        // New entry for Q
+	eF,
 };
 
 // THERE ARE FOUR DIFFERENT TYPES OF KEYBOARD KEY INTERACTIONS

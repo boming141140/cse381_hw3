@@ -204,6 +204,8 @@ class Renderer
 	void      reload_scene(const char *scene_name);
 	void      add_prymaid(sg::Node &node);
 	void      load_additional_gltf_object(const char *file_path);
+	void      on_shoot();
+	void      shoot_bullet(glm::vec3 playerPosition);
 	void create_controller();
 	void create_rendering_resources();
 	void create_frame_resources();
