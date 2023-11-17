@@ -41,6 +41,15 @@ class Camera;
 
 }        // namespace sg
 
+struct Bullet
+{
+	sg::Node *node;
+	glm::vec3 direction;
+	float     speed;
+	float     creationTime;
+	float     rotationSpeed;
+};
+
 class Window;
 class Instance;
 class PhysicalDevice;
@@ -218,5 +227,8 @@ class Renderer
 	void create_pipeline_resources();
 	void add_new_player();
 	sg::Node &add_player_script(const char *node_name);
+	float               getCurrentTime();
+	std::vector<Bullet> activeBullets;
+	void                updateBullets(float deltaTime);
 };
 }        // namespace W3D
