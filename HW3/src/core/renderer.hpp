@@ -138,6 +138,7 @@ class Renderer
 	bool                       is_window_resized_ = false;
 	glm::vec3                  delta_translation  = glm::vec3(0.0f, 0.0f, 3.0f);
 	float                  timer_creation     = 0; 
+	float                      bullet_index;
 
   public:
 	/*

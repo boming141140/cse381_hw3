@@ -50,9 +50,9 @@ class Controller
 	sg::Node &Light_3;
 	sg::Node &Light_4;
 	Renderer  *render;
-	sg::Node  *player_3 = nullptr;
-	sg::Node  *player_4 = nullptr;
-	sg::Node  *player_5 = nullptr;
+	sg::Node  *player_3;
+	sg::Node  *player_4;
+	sg::Node  *player_5;
 	// THIS KEEPS TRACK OF WHICH GAME OBJECT WE ARE CURRENTLY CONTROLLING
 	// WITH THIS OBJECT
 	ControllerMode mode_;
