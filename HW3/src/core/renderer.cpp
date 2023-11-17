@@ -199,6 +199,10 @@ void Renderer::reload_scene(const char *scene_name)
 	Light_2            = new sg::Node(lightNodeId++, "Light_2");
 	Light_3            = new sg::Node(lightNodeId++, "Light_3");
 	Light_4            = new sg::Node(lightNodeId++, "Light_4");
+	LIGHT_POSITIONS[0] = glm::vec3(6.0f, 0.0f, 6.0f);
+	LIGHT_POSITIONS[1] = glm::vec3(-3.0f, 0.0f, 6.0f);
+	LIGHT_POSITIONS[2] = glm::vec3(0.0f, -6.0f, -6.0f);
+	LIGHT_POSITIONS[3] = glm::vec3(-6.0f, -6.0f, -6.0f);
 	Light_1->get_transform().set_tranlsation(LIGHT_POSITIONS[0]);
 	Light_2->get_transform().set_tranlsation(LIGHT_POSITIONS[1]);
 	Light_3->get_transform().set_tranlsation(LIGHT_POSITIONS[2]);
