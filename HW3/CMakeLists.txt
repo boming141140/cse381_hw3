@@ -124,8 +124,6 @@ target_sources(${PROJECT_NAME} PRIVATE
     src/scene_graph/scripts/free_camera.hpp
     src/scene_graph/scripts/player.cpp
     src/scene_graph/scripts/player.hpp
-    src/scene_graph/scripts/bullet.cpp
-    src/scene_graph/scripts/bullet.hpp
 )
 
 set_target_properties(${PROJECT_NAME}

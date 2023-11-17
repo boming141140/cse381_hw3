@@ -210,7 +210,6 @@ void Renderer::reload_scene(const char *scene_name)
 	create_rendering_resources();
 	p_sframe_buffer_ = std::make_unique<SwapchainFramebuffer>(*p_device_, *p_swapchain_, *p_render_pass_);
 	this->timer_creation   = 0;
-	this->bullet_index   = 0;
 	create_controller();
 	p_controller_->insert_render(*this);
 }
@@ -281,8 +280,6 @@ void Renderer::shoot_bullet(glm::vec3 playerPos)
 
 	bulletNode->get_transform().set_rotation(cameraDirection);
 	bulletNode->get_transform().set_scale(temp_scale * 0.1f);
-	
-	bulletNode->set_name("bullet_" + std::to_string(static_cast<int>(bullet_index++)));
 
 	// Add the bullet to the scene
 	p_scene_->get_root_node().get_children().front()->add_child(*bulletNode);
