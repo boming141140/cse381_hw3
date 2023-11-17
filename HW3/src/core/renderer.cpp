@@ -252,7 +252,7 @@ void Renderer::updateBullets(float deltaTime)
 		Bullet &bullet = *it;
 
 		// Update bullet position
-		glm::vec3 newPosition = bullet.node->get_transform().get_translation() + bullet.direction * bullet.speed * deltaTime;
+		glm::vec3 newPosition = bullet.node->get_transform().get_translation() - bullet.direction * bullet.speed * deltaTime*4.5f;
 		bullet.node->get_transform().set_tranlsation(newPosition);
 
 		// Update bullet rotation
@@ -264,66 +264,59 @@ void Renderer::updateBullets(float deltaTime)
 		// Check if bullet should be destroyed
 		if (getCurrentTime() - bullet.creationTime > 3.0f)
 		{
-			// Remove bullet from scene
-
+			delete_from_scene(*bullet.node);
 			it = activeBullets.erase(it);
 		}
 		else
 		{
 			// Check for collision with players
-
-			// If no collision, proceed to the next bullet
-			++it;
+			if (p_controller_->are_players_colliding(*bullet.node))
+			{
+				sg::Node *colliding_obj = p_controller_->colliding_target(*bullet.node);
+				delete_from_scene(*bullet.node);
+				delete_from_scene(*colliding_obj);
+				p_controller_->delete_player(*colliding_obj);
+				it = activeBullets.erase(it);
+			}
+			else
+			{
+				// If no collision, proceed to the next bullet
+				++it;
+			}	
 		}
 	}
 }
 
-void Renderer::on_shoot()
+void Renderer::delete_from_scene(sg::Node &node)
 {
-	glm::vec3 playerPosition = glm::vec3(0.0f, 0.0f, 0.0f);
-	if (p_controller_->mode_ == ControllerMode::ePlayer1)
-	{
-		playerPosition = p_controller_->player_1.get_transform().get_translation();
-		shoot_bullet(playerPosition);
-	}
-	else if (p_controller_->mode_ == ControllerMode::ePlayer2)
-	{
-		playerPosition = p_controller_->player_2.get_transform().get_translation();
-		shoot_bullet(playerPosition);
-	}
-	else if (p_controller_->mode_ == ControllerMode::ePlayer3)
-	{
-		//playerPosition = p_controller_->player_3.get_transform().get_translation();
-		shoot_bullet(playerPosition);
-	}
-	else if (p_controller_->mode_ == ControllerMode::ePlayer4)
-	{
-		//playerPosition = p_controller_->player_4.get_transform().get_translation();
-		shoot_bullet(playerPosition);
-	}
-	else if (p_controller_->mode_ == ControllerMode::ePlayer5)
-	{
-		//playerPosition = p_controller_->player_5.get_transform().get_translation();
-		shoot_bullet(playerPosition);
-	}
-}
-void Renderer::shoot_bullet(glm::vec3 playerPos)
-{
-	glm::vec3 playerPosition = playerPos;
+	sg::Node *parent_node = node.get_parent();
+	parent_node->delete_child(node);
 
+	PBRBaker baker(*p_device_);
+	baked_pbr_ = baker.bake();
+	create_rendering_resources();
+	p_sframe_buffer_ = std::make_unique<SwapchainFramebuffer>(*p_device_, *p_swapchain_, *p_render_pass_);
+}
+
+void Renderer::shoot_bullet()
+{
 	sg::Camera                 &camera          = p_camera_node_->get_component<sg::Camera>();
 	glm::mat4                  viewMatrix = camera.get_view();
 	glm::vec3                   cameraForward   = glm::normalize(glm::vec3(viewMatrix[0][2], viewMatrix[1][2], viewMatrix[2][2]));
-
+	//Getting camera location
+	glm::mat4                   invViewMatrix   = glm::inverse(viewMatrix);
+	glm::vec3  cameraPosition = camera.get_node()->get_transform().get_translation();
 	GLTFLoader                 loader(*p_device_);
 
 	std::unique_ptr<sg::Scene>  bulletScene = loader.read_scene_from_file("2.0/BoxTextured/glTF/Bullet.gltf");
 	std::unique_ptr<sg::Node>   bulletNode  = bulletScene->find_node_by_index(0);
 	glm::vec3                   temp_scale  = bulletNode->get_component<sg::Transform>().get_scale();
 	float                       angle       = glm::radians(90.0f);
-	glm::vec3                   axis        = glm::vec3(1, 0, 0);
+	glm::vec3                   axis        = glm::vec3(0, 1, 0);
 	glm::quat                   rotationB   = glm::angleAxis(angle, axis);
 
+	// add identifier
+	bulletNode->set_name("bullet");
 	Bullet                      newBullet;
 	newBullet.node         = bulletNode.get();
 	newBullet.direction    = cameraForward;
@@ -334,17 +327,21 @@ void Renderer::shoot_bullet(glm::vec3 playerPos)
 	activeBullets.push_back(newBullet);
 
 	bulletScene->transfer_components_to(*p_scene_);
-	bulletNode->set_parent(*p_scene_->get_root_node().get_children().front());
+	bulletNode->set_parent(p_scene_->get_root_node());
 
-	bulletNode->get_transform().set_tranlsation(playerPosition);
-
+	bulletNode->get_transform().set_tranlsation(cameraPosition);
 	//bulletNode->get_transform().set_rotation(cameraDirection);
 	bulletNode->get_transform().set_scale(temp_scale * 0.1f);
 	bulletNode->get_transform().set_rotation(rotationB);
 
 	// Add the bullet to the scene
-	p_scene_->get_root_node().get_children().front()->add_child(*bulletNode);
+	p_scene_->get_root_node().add_child(*bulletNode);
 	p_scene_->add_node(std::move(bulletNode));
+
+	PBRBaker baker(*p_device_);
+	baked_pbr_ = baker.bake();
+	create_rendering_resources();
+	p_sframe_buffer_ = std::make_unique<SwapchainFramebuffer>(*p_device_, *p_swapchain_, *p_render_pass_);
 }
 
 void Renderer::load_additional_gltf_object(const char *file_path)
@@ -386,7 +383,7 @@ void Renderer::load_additional_gltf_object(const char *file_path)
 
 void Renderer::create_controller()
 {
-	p_controller_ = std::make_unique<Controller>(*p_camera_node_, add_player_script("player_1"), add_player_script("player_2"), add_player_script("Light_1"), add_player_script("Light_2"), add_player_script("Light_3"), add_player_script("Light_4"));
+	p_controller_ = std::make_unique<Controller>(*p_camera_node_, &add_player_script("player_1"), &add_player_script("player_2"), add_player_script("Light_1"), add_player_script("Light_2"), add_player_script("Light_3"), add_player_script("Light_4"));
 }
 
 void Renderer::render_frame()

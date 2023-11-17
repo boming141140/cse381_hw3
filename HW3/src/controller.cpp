@@ -9,13 +9,14 @@
 #include "scene_graph/script.hpp"
 #include "core/renderer.hpp"
 #include "scene_graph/scripts/player.hpp"
+#include <map>
 using namespace W3D::sg;
 
 namespace W3D
 {
 // Class that is responsible for dispatching events and answering collision queries
 
-Controller::Controller(sg::Node &camera_node, sg::Node &player_1_node, sg::Node &player_2_node, sg::Node &Light_1_node, sg::Node &Light_2_node, sg::Node &Light_3_node, sg::Node &Light_4_node) :
+Controller::Controller(sg::Node &camera_node, sg::Node *player_1_node, sg::Node *player_2_node, sg::Node &Light_1_node, sg::Node &Light_2_node, sg::Node &Light_3_node, sg::Node &Light_4_node):
     camera_(camera_node),
     player_1(player_1_node),
     player_2(player_2_node),
@@ -25,6 +26,8 @@ Controller::Controller(sg::Node &camera_node, sg::Node &player_1_node, sg::Node 
     Light_4(Light_4_node)
 {
 }
+
+
 
 void Controller::process_event(const Event &event)
 {
@@ -45,7 +48,8 @@ void Controller::process_event(const Event &event)
 		}
 		else if (key_input_event.code == KeyCode::eF && key_input_event.action == KeyAction::eDown)
 		{
-			this->render->on_shoot();
+			this->render->shoot_bullet();
+			return;
 		}
 		else if (key_input_event.code > KeyCode::eD && key_input_event.action == KeyAction::eDown)
 		{
@@ -65,25 +69,25 @@ void Controller::switch_mode(KeyCode code)
 	player_shut_off();
 	sg::Script *p_script;
 	// THE 1 KEY SWITCHES CONTROL TO THE PLAYER 1 CUBE
-	if (code == KeyCode::e1)
+	if (code == KeyCode::e1 && player_1)
 	{
 		mode_ = ControllerMode::ePlayer1;
-		p_script               = &player_1.get_component<sg::Script>();
-		sg::Script *p_script_1 = &player_1.get_component<sg::Script>();
+		p_script               = &player_1->get_component<sg::Script>();
+		sg::Script *p_script_1 = &player_1->get_component<sg::Script>();
 		Player     *p_player_1 = dynamic_cast<Player *>(p_script_1);
 		p_player_1->toggle_select_on();
 	}
 	// THE 2 KEY SWITCHES CONTROL TO THE PLAYER 2 CUBE
-	else if (code == KeyCode::e2)
+	else if (code == KeyCode::e2 && player_2)
 	{
 		mode_ = ControllerMode::ePlayer2;
-		p_script               = &player_2.get_component<sg::Script>();
-		sg::Script *p_script_2 = &player_2.get_component<sg::Script>();
+		p_script               = &player_2->get_component<sg::Script>();
+		sg::Script *p_script_2 = &player_2->get_component<sg::Script>();
 		Player     *p_player_2 = dynamic_cast<Player *>(p_script_2);
 		p_player_2->toggle_select_on();
 	}
 	// THE 3 KEY SWITCHES CONTROL TO THE CAMERA 
-	else if (code == KeyCode::e3)
+	else if (code == KeyCode::e3 )
 	{
 		mode_ = ControllerMode::eCamera;
 	}
@@ -108,7 +112,7 @@ void Controller::switch_mode(KeyCode code)
 		mode_ = ControllerMode::eLight4;
 	}
 	// THE 8 KEY SWITCHES CONTROL TO THE PLAYER 3 CUBE
-	else if (code == KeyCode::e8)
+	else if (code == KeyCode::e8 && player_3)
 	{
 		mode_ = ControllerMode::ePlayer3;
 		p_script               = &player_3->get_component<sg::Script>();
@@ -117,7 +121,7 @@ void Controller::switch_mode(KeyCode code)
 		p_player_3->toggle_select_on();
 	}
 	// THE 9 KEY SWITCHES CONTROL TO THE PLAYER 4 CUBE
-	else if (code == KeyCode::e9)
+	else if (code == KeyCode::e9 && player_4)
 	{
 		mode_ = ControllerMode::ePlayer4;
 		p_script               = &player_4->get_component<sg::Script>();
@@ -126,13 +130,17 @@ void Controller::switch_mode(KeyCode code)
 		p_player_4->toggle_select_on();
 	}
 	// THE 0 KEY SWITCHES CONTROL TO THE PLAYER 5 CUBE
-	else if (code == KeyCode::e0)
+	else if (code == KeyCode::e0 && player_5)
 	{
 		mode_ = ControllerMode::ePlayer5;
 		p_script               = &player_5->get_component<sg::Script>();
 		sg::Script *p_script_5 = &player_5->get_component<sg::Script>();
 		Player     *p_player_5 = dynamic_cast<Player *>(p_script_5);
 		p_player_5->toggle_select_on();
+	}
+	else
+	{
+		mode_ = ControllerMode::eCamera;
 	}
 	
 }
@@ -143,13 +151,13 @@ void Controller::deliver_event(const Event &event)
 	// A FURTHER REPONSE. FIRST GET THE ASSOCIATED SCRIPT
 	
 	sg::Script *p_script;
-	if (mode_ == ControllerMode::ePlayer1)
+	if (mode_ == ControllerMode::ePlayer1 && player_1)
 	{
-		p_script = &player_1.get_component<sg::Script>();
+		p_script = &player_1->get_component<sg::Script>();
 	}
-	else if (mode_ == ControllerMode::ePlayer2)
+	else if (mode_ == ControllerMode::ePlayer2 && player_2)
 	{
-		p_script = &player_2.get_component<sg::Script>();
+		p_script = &player_2->get_component<sg::Script>();
 	}
 	else if (mode_ == ControllerMode::eCamera)
 	{
@@ -171,15 +179,15 @@ void Controller::deliver_event(const Event &event)
 	{
 		p_script = &Light_4.get_component<sg::Script>();
 	}
-	else if (mode_ == ControllerMode::ePlayer3 && player_3 != nullptr)
+	else if (mode_ == ControllerMode::ePlayer3 && player_3)
 	{
 		p_script = &player_3->get_component<sg::Script>();
 	}
-	else if (mode_ == ControllerMode::ePlayer4 && player_4 != nullptr)
+	else if (mode_ == ControllerMode::ePlayer4 && player_4)
 	{
 		p_script = &player_4->get_component<sg::Script>();
 	}
-	else if (mode_ == ControllerMode::ePlayer5 && player_5 != nullptr)
+	else if (mode_ == ControllerMode::ePlayer5 && player_5)
 	{
 		p_script = &player_5->get_component<sg::Script>();
 	}
@@ -193,33 +201,38 @@ void Controller::deliver_event(const Event &event)
 
 void Controller::player_shut_off()
 {
-	sg::Script *p_script_1 = &player_1.get_component<sg::Script>();
-	sg::Script *p_script_2 = &player_2.get_component<sg::Script>();
+	
+	if (player_1)
+	{
+		sg::Script *p_script_1 = &player_1->get_component<sg::Script>();
 
-	Player *p_player_1 = dynamic_cast<Player *>(p_script_1);
-	Player *p_player_2 = dynamic_cast<Player *>(p_script_2);
+		Player *p_player_1 = dynamic_cast<Player *>(p_script_1);
+
+		p_player_1->toggle_select_off();
+	}
+	if (player_2)
+	{
+		sg::Script *p_script_2 = &player_2->get_component<sg::Script>();
+
+		Player *p_player_2 = dynamic_cast<Player *>(p_script_2);
+
+		p_player_2->toggle_select_off();
+	}
 	if (player_5)
 	{
-		sg::Script *p_script_3 = &player_3->get_component<sg::Script>();
-		sg::Script *p_script_4 = &player_4->get_component<sg::Script>();
 		sg::Script *p_script_5 = &player_5->get_component<sg::Script>();
 
-		Player *p_player_3 = dynamic_cast<Player *>(p_script_3);
-		Player *p_player_4 = dynamic_cast<Player *>(p_script_4);
 		Player *p_player_5 = dynamic_cast<Player *>(p_script_5);
-		p_player_3->toggle_select_off();
-		p_player_4->toggle_select_off();
+		
 		p_player_5->toggle_select_off();
 	}
 	if (player_4)
 	{
-		sg::Script *p_script_3 = &player_3->get_component<sg::Script>();
+		
 		sg::Script *p_script_4 = &player_4->get_component<sg::Script>();
 
-		Player *p_player_3 = dynamic_cast<Player *>(p_script_3);
 		Player *p_player_4 = dynamic_cast<Player *>(p_script_4);
 
-		p_player_3->toggle_select_off();
 		p_player_4->toggle_select_off();
 	}
 	if (player_3)
@@ -230,69 +243,100 @@ void Controller::player_shut_off()
 
 		p_player_3->toggle_select_off();
 	}
-	p_player_1->toggle_select_off();
-	p_player_2->toggle_select_off();
 }
 bool Controller::are_players_colliding(sg::Node &node)
 {
-	glm::mat4 p1_M              = player_1.get_transform().get_world_M();
-	glm::mat4 p2_M              = player_2.get_transform().get_world_M();
-	glm::mat4 p3_M              = glm::mat4(0.0f);
-	glm::mat4 p4_M              = glm::mat4(0.0f);
-	glm::mat4 p5_M              = glm::mat4(0.0f);
-	
-	
-	sg::AABB  p1_transformed_bd = player_1.get_component<sg::Mesh>().get_bounds().transform(p1_M);
-	sg::AABB  p2_transformed_bd = player_2.get_component<sg::Mesh>().get_bounds().transform(p2_M);
-	sg::AABB  p3_transformed_bd;
-	sg::AABB  p4_transformed_bd;
-	sg::AABB  p5_transformed_bd;
-	
-	sg::AABB holder;
-	std::vector<sg::AABB> transformedBounds;
-	if (node.get_name() == "player_1")
-		holder = p1_transformed_bd;
-	else
-		transformedBounds.push_back(p1_transformed_bd);
-	if (node.get_name() == "player_2")
-		holder = p2_transformed_bd;
-	else
-		transformedBounds.push_back(p2_transformed_bd);
-	if (player_3)
+	std::vector<sg::Node *> players = {player_1, player_2, player_3, player_4, player_5};
+
+	glm::mat4 node_transform = node.get_transform().get_world_M();
+	sg::AABB  holder         = node.get_component<sg::Mesh>().get_bounds().transform(node_transform);
+
+	std::vector<Bullet> bullet_vector = render->activeBullets;
+	auto                it            = bullet_vector.begin();
+	while (it != bullet_vector.end())
 	{
-		p3_M              = player_3->get_transform().get_world_M();
-		p3_transformed_bd = player_3->get_component<sg::Mesh>().get_bounds().transform(p3_M);
-		if (node.get_name() != "player_3")
-			transformedBounds.push_back(p3_transformed_bd);
-		else
-			holder = p3_transformed_bd;
+		Bullet &bullet      = *it;
+		Node   *bullet_node = bullet.node;
+		if (bullet_node != &node)
+		{
+			glm::mat4 bullet_transform      = bullet_node->get_transform().get_world_M();
+			sg::AABB  bullet_transformed_bd = bullet_node->get_component<sg::Mesh>().get_bounds().transform(bullet_transform);
+			// Check for collision with the current node
+			if (holder.collides_with(bullet_transformed_bd))
+			{
+				return true;
+			}
+		}
+		++it;
 	}
-	if (player_4)
+	// Process each player
+	for (auto player : players)
 	{
-		p4_M              = player_4->get_transform().get_world_M();
-		p4_transformed_bd = player_4->get_component<sg::Mesh>().get_bounds().transform(p4_M);
-		if (node.get_name() != "player_4")
-			transformedBounds.push_back(p4_transformed_bd);
-		else
-			holder = p4_transformed_bd;
+		// Check if the player is valid and not the node itself
+		if (player && player->get_name() != node.get_name())
+		{
+			glm::mat4 transform      = player->get_transform().get_world_M();
+			sg::AABB  transformed_bd = player->get_component<sg::Mesh>().get_bounds().transform(transform);
+
+			// Check for collision with the current node
+			if (holder.collides_with(transformed_bd))
+			{
+				return true;
+			}
+		}
 	}
-	if (player_5)
-	{
-		p5_M              = player_5->get_transform().get_world_M();
-		p5_transformed_bd = player_5->get_component<sg::Mesh>().get_bounds().transform(p5_M);
-		if (node.get_name() != "player_5")
-			transformedBounds.push_back(p5_transformed_bd);
-		else
-			holder = p5_transformed_bd;
-	}
-	
-	bool result = false;
-	for (auto it = transformedBounds.begin(); it != transformedBounds.end(); ++it)
-	{
-		result = result || holder.collides_with(*it);
-	}
-	return result;
+
+	// No collision found, return false
+	return false;
 }
+
+sg::Node *Controller::colliding_target(sg::Node &node)
+{
+	std::vector<sg::Node *> players = {player_1, player_2, player_3, player_4, player_5};
+
+	glm::mat4 node_transform      = node.get_transform().get_world_M();
+	sg::AABB  holder         = node.get_component<sg::Mesh>().get_bounds().transform(node_transform);
+	
+	std::vector<Bullet> bullet_vector = render->activeBullets;
+	auto                it            = bullet_vector.begin();
+	while (it != bullet_vector.end())
+	{
+		Bullet &bullet      = *it;
+		Node   *bullet_node = bullet.node;
+		if (bullet_node != &node)
+		{
+			glm::mat4 bullet_transform      = bullet_node->get_transform().get_world_M();
+			sg::AABB  bullet_transformed_bd = bullet_node->get_component<sg::Mesh>().get_bounds().transform(bullet_transform);
+			// Check for collision with the current node
+			if (holder.collides_with(bullet_transformed_bd))
+			{
+				return bullet_node;
+			}
+		}
+		++it;
+	}
+	// Process each player
+	for (auto player : players)
+	{
+		// Check if the player is valid and not the node itself
+		if (player && player->get_name() != node.get_name())
+		{
+			glm::mat4 transform      = player->get_transform().get_world_M();
+			sg::AABB  transformed_bd = player->get_component<sg::Mesh>().get_bounds().transform(transform);
+
+			// Check for collision with the current node
+			if (holder.collides_with(transformed_bd))
+			{
+				return player;
+			}
+		}
+	}
+
+	// No collision found, return nullptr
+	return nullptr;
+	
+}
+
 
 void Controller::insert_render(Renderer &render)
 {
@@ -314,5 +358,16 @@ void Controller::insert_player_5(sg::Node &new_player_5)
 	this->player_5 = &new_player_5;
 }
 
-
+void Controller::delete_player(sg::Node& new_player_5)
+{
+	sg::Node **players[] = {&player_1, &player_2, &player_3, &player_4, &player_5};
+	for (auto &player : players)
+	{
+		if (*player && *player == &new_player_5)
+		{
+			*player = nullptr;        // Set to nullptr to avoid dangling pointer
+			break;                   // Assuming only one player can match
+		}
+	}
+}
 };        // namespace W3D

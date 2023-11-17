@@ -43,8 +43,8 @@ class Controller
 	// ADD PLAYER 3, PLAYER 4, PLAYER 5
 	// ADD LIGHT 1, LIGHT 2, LIGHT 3, LIGHT 4
 	sg::Node &camera_;
-	sg::Node &player_1;
-	sg::Node &player_2;
+	sg::Node *player_1;
+	sg::Node *player_2;
 	sg::Node &Light_1;
 	sg::Node &Light_2;
 	sg::Node &Light_3;
@@ -59,7 +59,7 @@ class Controller
 	/*
 	* Constructor that initializes all the controllable game objects.
 	*/
-	Controller(sg::Node &camera_node, sg::Node &player_1_node, sg::Node &player_2_node, sg::Node &Light_1_node, sg::Node &Light_2_node, sg::Node &Light_3_node, sg::Node &Light_4_node);
+	Controller(sg::Node &camera_node, sg::Node *player_1_node, sg::Node *player_2_node, sg::Node &Light_1_node, sg::Node &Light_2_node, sg::Node &Light_3_node, sg::Node &Light_4_node);
 
 	/*
 	* This function handles events. If it's a key event it will provide a programmed
@@ -90,11 +90,14 @@ class Controller
 	void player_shut_off();
 	bool are_players_colliding(sg::Node &node);
 
+	sg::Node *colliding_target(sg::Node &node);
+
 	void insert_render(Renderer &render);
 
 	void insert_player_3(sg::Node &new_player_3);
 	void insert_player_4(sg::Node &new_player_4);
 	void insert_player_5(sg::Node &new_player_5);
+	void delete_player(sg::Node &new_player_5);
 };	// class Controller
 
 }	// namespace W3D

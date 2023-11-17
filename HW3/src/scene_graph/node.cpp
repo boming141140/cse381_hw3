@@ -16,6 +16,15 @@ void Node::add_child(Node &child)
 	children_.push_back(&child);
 }
 
+void Node::delete_child(Node &child)
+{
+	auto it = std::find_if(children_.begin(), children_.end(), [&child](const Node *n) { return n == &child; });
+	if (it != children_.end())
+	{
+		children_.erase(it);
+	}
+}
+
 void Node::set_parent(Node &parent)
 {
 	parent_ = &parent;
