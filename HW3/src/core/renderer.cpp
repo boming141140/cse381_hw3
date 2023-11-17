@@ -3,6 +3,7 @@
 
 // C/C++ LANGUAGE API TYPES
 #include <queue>
+#include <chrono>
 
 // OUR OWN TYPES
 #include "common/cvar.hpp"
@@ -137,6 +138,7 @@ void Renderer::update()
 		// UPDATE THE SCENE OBJECT VIA ITS SCRIPT
 		p_script->update(delta_time);
 	}
+	updateBullets(delta_time);
 }
 
 void Renderer::process_event(const Event &event)
@@ -231,6 +233,117 @@ void Renderer::add_prymaid(sg::Node &node)
 	node.add_child(*new_object_node_1);
 	p_scene_->add_node(std::move(new_object_node_1));
 }
+
+float Renderer::getCurrentTime()
+{
+	auto now      = std::chrono::high_resolution_clock::now();
+	auto now_ms   = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
+	auto value    = now_ms.time_since_epoch();
+	long duration = value.count();
+
+	return static_cast<float>(duration) * 0.001f;
+}
+
+void Renderer::updateBullets(float deltaTime)
+{
+	auto it = activeBullets.begin();
+	while (it != activeBullets.end())
+	{
+		Bullet &bullet = *it;
+
+		// Update bullet position
+		glm::vec3 newPosition = bullet.node->get_transform().get_translation() - bullet.direction * bullet.speed * deltaTime*4.5f;
+		bullet.node->get_transform().set_tranlsation(newPosition);
+
+		// Update bullet rotation
+		float     angle              = bullet.rotationSpeed * deltaTime;
+		glm::quat currentRotation    = bullet.node->get_transform().get_rotation();
+		glm::quat additionalRotation = glm::angleAxis(glm::radians(angle), glm::vec3(0, 1, 0));
+		bullet.node->get_transform().set_rotation(currentRotation * additionalRotation);
+
+		// Check if bullet should be destroyed
+		if (getCurrentTime() - bullet.creationTime > 3.0f)
+		{
+			delete_from_scene(*bullet.node);
+			it = activeBullets.erase(it);
+		}
+		else
+		{
+			// Check for collision with players
+			if (p_controller_->are_players_colliding(*bullet.node))
+			{
+				sg::Node *colliding_obj = p_controller_->colliding_target(*bullet.node);
+				delete_from_scene(*bullet.node);
+				delete_from_scene(*colliding_obj);
+				p_controller_->delete_player(*colliding_obj);
+				it = activeBullets.erase(it);
+			}
+			else
+			{
+				// If no collision, proceed to the next bullet
+				++it;
+			}	
+		}
+	}
+}
+
+void Renderer::delete_from_scene(sg::Node &node)
+{
+	sg::Node *parent_node = node.get_parent();
+	parent_node->delete_child(node);
+
+	PBRBaker baker(*p_device_);
+	baked_pbr_ = baker.bake();
+	create_rendering_resources();
+	p_sframe_buffer_ = std::make_unique<SwapchainFramebuffer>(*p_device_, *p_swapchain_, *p_render_pass_);
+}
+
+void Renderer::shoot_bullet()
+{
+	sg::Camera                 &camera          = p_camera_node_->get_component<sg::Camera>();
+	glm::mat4                  viewMatrix = camera.get_view();
+	glm::vec3                   cameraForward   = glm::normalize(glm::vec3(viewMatrix[0][2], viewMatrix[1][2], viewMatrix[2][2]));
+	//Getting camera location
+	glm::mat4                   invViewMatrix   = glm::inverse(viewMatrix);
+	glm::vec3  cameraPosition = camera.get_node()->get_transform().get_translation();
+	GLTFLoader                 loader(*p_device_);
+
+	std::unique_ptr<sg::Scene>  bulletScene = loader.read_scene_from_file("2.0/BoxTextured/glTF/Bullet.gltf");
+	std::unique_ptr<sg::Node>   bulletNode  = bulletScene->find_node_by_index(0);
+	glm::vec3                   temp_scale  = bulletNode->get_component<sg::Transform>().get_scale();
+	float                       angle       = glm::radians(90.0f);
+	glm::vec3                   axis        = glm::vec3(0, 1, 0);
+	glm::quat                   rotationB   = glm::angleAxis(angle, axis);
+
+	// add identifier
+	bulletNode->set_name("bullet");
+	Bullet                      newBullet;
+	newBullet.node         = bulletNode.get();
+	newBullet.direction    = cameraForward;
+	newBullet.speed        = 1.0f;
+	newBullet.creationTime  = getCurrentTime();
+    newBullet.rotationSpeed = 90.0f;
+
+	activeBullets.push_back(newBullet);
+
+	bulletScene->transfer_components_to(*p_scene_);
+	bulletNode->set_parent(p_scene_->get_root_node());
+
+	bulletNode->get_transform().set_tranlsation(cameraPosition);
+	//bulletNode->get_transform().set_rotation(cameraDirection);
+	bulletNode->get_transform().set_scale(temp_scale * 0.1f);
+	bulletNode->get_transform().set_rotation(rotationB);
+
+	// Add the bullet to the scene
+	p_scene_->get_root_node().add_child(*bulletNode);
+	p_scene_->add_node(std::move(bulletNode));
+
+	PBRBaker baker(*p_device_);
+	baked_pbr_ = baker.bake();
+	create_rendering_resources();
+	p_sframe_buffer_ = std::make_unique<SwapchainFramebuffer>(*p_device_, *p_swapchain_, *p_render_pass_);
+}
+
 void Renderer::load_additional_gltf_object(const char *file_path)
 {
 	if (this->timer_creation < 3.0f)
@@ -270,7 +383,7 @@ void Renderer::load_additional_gltf_object(const char *file_path)
 
 void Renderer::create_controller()
 {
-	p_controller_ = std::make_unique<Controller>(*p_camera_node_, add_player_script("player_1"), add_player_script("player_2"), add_player_script("Light_1"), add_player_script("Light_2"), add_player_script("Light_3"), add_player_script("Light_4"));
+	p_controller_ = std::make_unique<Controller>(*p_camera_node_, &add_player_script("player_1"), &add_player_script("player_2"), add_player_script("Light_1"), add_player_script("Light_2"), add_player_script("Light_3"), add_player_script("Light_4"));
 }
 
 void Renderer::render_frame()

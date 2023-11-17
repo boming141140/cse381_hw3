@@ -102,6 +102,8 @@ class Node
 	*/
 	void add_child(Node &child);
 
+	void delete_child(Node &child);
+
 };	// class Node
 
 }	// namespace W3D::sg
