@@ -34,6 +34,7 @@
 #include "scene_graph/script.hpp"
 #include "scene_graph/scripts/free_camera.hpp"
 #include "scene_graph/scripts/player.hpp"
+//#include "scene_graph/scripts/bullet.hpp"
 
 namespace W3D
 {
@@ -84,6 +85,8 @@ Renderer::Renderer()
 	p_scene_->add_node(std::unique_ptr<sg::Node>(Light_2));
 	p_scene_->add_node(std::unique_ptr<sg::Node>(Light_3));
 	p_scene_->add_node(std::unique_ptr<sg::Node>(Light_4));
+	//activeBullets = std::vector<sg::Node *>();
+
 	PBRBaker baker(*p_device_);
 	baked_pbr_ = baker.bake();
 	create_rendering_resources();
@@ -130,6 +133,7 @@ void Renderer::update()
 
 	// THESE ARE ALL THE SCENE SCRIPTS, ONE FOR EACH UPDATABLE ITEM
 	std::vector<sg::Script *> p_scripts = p_scene_->get_components<sg::Script>();
+	//update_bullet_rotations(delta_time);
 
 	// GO THROUGH ALL THE SCRIPTS
 	for (sg::Script *p_script : p_scripts)
@@ -287,11 +291,21 @@ void Renderer::shoot_bullet(glm::vec3 playerPos)
 	// Add the bullet to the scene
 	p_scene_->get_root_node().get_children().front()->add_child(*bulletNode);
 	p_scene_->add_node(std::move(bulletNode));
+	//p_controller_->
+	//activeBullets.push_back(bulletNode.get());
 
 	PBRBaker baker(*p_device_);
 	baked_pbr_ = baker.bake();
 	create_rendering_resources();
 	p_sframe_buffer_ = std::make_unique<SwapchainFramebuffer>(*p_device_, *p_swapchain_, *p_render_pass_);
+}
+void Renderer::update_bullet_rotations(float deltaTime) {
+    for (auto& bulletNode : activeBullets) {
+        glm::quat currentRotation = bulletNode->get_transform().get_rotation();
+        float rotationSpeedY = 90.0f; // Adjust this value as needed
+        glm::quat rotationIncrement = glm::angleAxis(glm::radians(rotationSpeedY * deltaTime), glm::vec3(0, 1, 0)); // Y-axis rotation
+        bulletNode->get_transform().set_rotation(rotationIncrement * currentRotation);
+    }
 }
 
 void Renderer::load_additional_gltf_object(const char *file_path)
@@ -654,6 +668,23 @@ sg::Node &Renderer::add_player_script(const char *node_name)
 
 	return *p_node;
 }
+
+// add new player and their control
+/*
+sg::Node &Renderer::add_bullet_script(const char *node_name)
+{
+	sg::Node *p_node = p_scene_->find_node(node_name);
+	if (!p_node)
+	{
+		LOGE("Cannot find node {}", node_name);
+		abort();
+	};
+
+	std::unique_ptr<sg::Bullet> p_script = std::make_unique<sg::Bullet>(*p_node);
+	p_scene_->add_component_to_node(std::move(p_script), *p_node);
+
+	return *p_node;
+}*/
 
 
 void Renderer::create_rendering_resources()

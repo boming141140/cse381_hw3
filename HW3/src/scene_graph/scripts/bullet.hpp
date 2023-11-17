@@ -30,7 +30,7 @@ class Bullet : public NodeScript
 	 * When the player is the active object that can be moved it will be asked to
 	 * respond to events like key presses.
 	 */
-	void process_event(const Event &event) override;
+	//void process_event(const Event &event) override;
 	void toggle_select_on();
 	void toggle_select_off();
 };
