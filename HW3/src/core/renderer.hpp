@@ -218,8 +218,6 @@ class Renderer
 	void create_render_pass();
 	void create_pipeline_resources();
 	void add_new_player();
-	void                    update_bullet_rotations(float deltaTime);
 	sg::Node &add_player_script(const char *node_name);
-	std::vector<sg::Node *> activeBullets;
 };
 }        // namespace W3D

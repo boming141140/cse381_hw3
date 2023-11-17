@@ -11,7 +11,6 @@ Bullet::Bullet(Node &node) :
 // This method is called every frame. Responsible for updating a node's state
 void Bullet::update(float delta_time)
 {
-	/*
 	glm::vec3 delta_translation(0.0f, 0.0f, 0.0f);
 
 	// Caveat: The models are rotated! Therefore, we translate the objects in model space in z-direction
@@ -33,7 +32,7 @@ void Bullet::update(float delta_time)
 	if (key_pressed_[KeyCode::eD])
 	{
 	    delta_translation.x += TRANSLATION_MOVE_STEP;
-	}
+	}*/
 
 	if (selected && get_node().get_children().size() != 0)
 	{
@@ -53,6 +52,6 @@ void Bullet::update(float delta_time)
 	{
 		get_node().get_children()[0]->get_transform().invalidate_local_M();
 		// B.set_tranlsation(T.get_translation() + new_delta_translation);
-	}*/
+	}
 }
 }
